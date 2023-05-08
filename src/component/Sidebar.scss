@@ -1,15 +1,28 @@
 /* 2 pinterest long press */
 
 .sidebar {
-	font-family: 'IBM Plex Mono';
-	font-style: normal;
-	font-weight: 600;
-	font-size: 14px;
-	line-height: 150%;
-    margin-top: 12px;
+	padding-top: 12px;
+	min-height: 100vh;
+	background-color: var(--green2);
+	z-index: -2;
 	ol {
+		padding-left: 12px;
 		li {
-            margin: 16px 16px 24px 16px;
+			list-style-position: inside;
+			box-sizing: content-box;
+			font-family: 'IBM Plex Mono';
+			font-style: normal;
+			font-weight: 600;
+			font-size: 16px;
+			line-height: 150%;
+			padding: 10px;
+			position: relative;
+			.underline {
+				position: absolute;
+				background-color: var(--green3);
+				z-index: -1;
+				border-radius: 8px;
+			}
 		}
 	}
 }
