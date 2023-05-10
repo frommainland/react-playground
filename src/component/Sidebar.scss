@@ -16,7 +16,13 @@
 			font-size: 16px;
 			line-height: 150%;
 			padding: 10px;
+			padding-right: 0;
+			margin-right: 10px;
+            margin-bottom: 4px;
+            border-radius: 8px;
 			position: relative;
+			cursor: pointer;
+			z-index: 0;
 			.underline {
 				position: absolute;
 				background-color: var(--green3);
