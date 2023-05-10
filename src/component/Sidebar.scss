@@ -7,27 +7,30 @@
 	z-index: -2;
 	ol {
 		padding-left: 12px;
-		li {
-			list-style-position: inside;
-			box-sizing: content-box;
-			font-family: 'IBM Plex Mono';
-			font-style: normal;
-			font-weight: 600;
-			font-size: 16px;
-			line-height: 150%;
-			padding: 10px;
-			padding-right: 0;
-			margin-right: 10px;
-            margin-bottom: 4px;
-            border-radius: 8px;
-			position: relative;
-			cursor: pointer;
-			z-index: 0;
-			.underline {
-				position: absolute;
-				background-color: var(--green3);
-				z-index: -1;
+		a {
+            text-decoration: none;
+			li {
+				list-style-position: inside;
+				box-sizing: content-box;
+				font-family: 'IBM Plex Mono';
+				font-style: normal;
+				font-weight: 600;
+				font-size: 16px;
+				line-height: 150%;
+				padding: 10px;
+				padding-right: 0;
+				margin-right: 10px;
+				margin-bottom: 4px;
 				border-radius: 8px;
+				position: relative;
+				cursor: pointer;
+				z-index: 0;
+				.underline {
+					position: absolute;
+					background-color: var(--green3);
+					z-index: -1;
+					border-radius: 8px;
+				}
 			}
 		}
 	}
