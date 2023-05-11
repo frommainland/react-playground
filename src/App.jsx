@@ -2,7 +2,7 @@ import './App.scss'
 // import Sidebar from './component/Sidebar'
 import Playground from './component/Playground'
 import { Routes, Route, Outlet, Link } from 'react-router-dom'
-import EmojiOnMouse from './Pages/EmojiOnMouse'
+import EmojiOnMouse from './Pages/EmojiOnMouse/EmojiOnMouse'
 import LongPress from './Pages/longPress'
 import NoMatch from './Pages/NoMatch'
 
@@ -75,7 +75,9 @@ const Sidebar = () => {
 					))}
 				</ol>
 			</nav>
-			<Outlet />
+			<div className="playground">
+				<Outlet />
+			</div>
 		</>
 	)
 }
