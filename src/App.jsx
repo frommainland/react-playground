@@ -1,9 +1,7 @@
 import './App.scss'
-// import Sidebar from './component/Sidebar'
-import Playground from './component/Playground'
 import { Routes, Route, Outlet, Link } from 'react-router-dom'
 import EmojiOnMouse from './Pages/EmojiOnMouse/EmojiOnMouse'
-import LongPress from './Pages/longPress'
+import LongPress from './Pages/LongPress/LongPress'
 import NoMatch from './Pages/NoMatch'
 
 import React, { useState } from 'react'

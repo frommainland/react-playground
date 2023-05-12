@@ -6,18 +6,27 @@
 	position: relative;
 	.logo {
 		position: absolute;
-		cursor: default;
+		user-select: none;
 	}
 }
 .emoji-bg-text {
-	font-family: 'SF Mono';
+	width: 80%;
 	font-weight: 700;
-	font-size: 2vh;
-	line-height: 150%;
+	font-size: clamp(4rem, 4vw, 5.5rem);
+	line-height: 100%;
 	color: var(--green1);
 	position: absolute;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
+	z-index: 2;
+	user-select: none;
 	pointer-events: none;
+	p {
+		margin-bottom: 0.625em;
+	}
+	a {
+		color: var(--green1);
+		font-size: clamp(2rem, 3vw, 3.5rem);
+	}
 }

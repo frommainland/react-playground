@@ -15,7 +15,6 @@ const EmojiItem = ({ pageX, pageY, text, fontSize, rotate }) => {
 				left: pageX,
 				top: pageY,
 				fontSize: fontSize,
-				// transform: `rotate(${rotate}deg) translate(-50%, 50%)`,
 				transform: `translate(-50%, -50%) rotate(${rotate}deg)`,
 			}}
 		>
@@ -39,7 +38,7 @@ const EmojiOnMouse = () => {
 		let fontSize = rdm(40, 160)
 		let rotate = rdm(0, 360)
 		setMove((move) => move + 1)
-		if (move % 10 === 0) {
+		if (move % 7 === 0) {
 			setEmojiArray((pre) => [
 				...pre,
 				[text, pageX, pageY, fontSize, rotate],
@@ -49,6 +48,11 @@ const EmojiOnMouse = () => {
 
 	return (
 		<>
+			<div className="emoji-bg-text">
+				<p>How to improve this page performance?</p>
+				<p>Please let me know</p>
+				<a href="mailto:caihehuang@gmail.com">caihehuang@gmail.com</a>
+			</div>
 			<div className="emoji-bg" onMouseMove={becool} ref={ref}>
 				{emojiArray.map((value, index) => {
 					return (
@@ -62,10 +66,6 @@ const EmojiOnMouse = () => {
 						/>
 					)
 				})}
-			</div>
-			<div className="emoji-bg-text">
-				<p>How to improve this page performance?</p>
-				<p>Please let me know caihehuang@gmail.com</p>
 			</div>
 		</>
 	)
