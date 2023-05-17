@@ -4,10 +4,11 @@ import EmojiOnMouse from './Pages/EmojiOnMouse/EmojiOnMouse'
 import LongPress from './Pages/LongPress/LongPress'
 import NoMatch from './Pages/NoMatch'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './component/Sidebar.scss'
 import { motion } from 'framer-motion'
 import { useMeasure } from 'react-use'
+import { atom, useAtom } from 'jotai'
 
 const menuItems = [
 	{
@@ -55,12 +56,20 @@ const MenuItem = ({ text, selected, onClick, pathName }) => {
 	)
 }
 
+export const sideBarWidthAtom = atom(null)
+
 const Sidebar = () => {
 	const [selected, setSelected] = useState(0)
+	const [ref, { width, height }] = useMeasure()
+	const [sidebarWidth, setSideBarWidth] = useAtom(sideBarWidthAtom)
+
+	useEffect(() => {
+		setSideBarWidth(width)
+	}, [])
 
 	return (
 		<>
-			<nav className="sidebar">
+			<nav className="sidebar" ref={ref}>
 				<ol>
 					{menuItems.map((value, index) => (
 						<MenuItem

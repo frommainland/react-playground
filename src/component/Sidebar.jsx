@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './Sidebar.scss'
 import { motion } from 'framer-motion'
 import { useMeasure } from 'react-use'
 import { Routes, Route, Outlet, Link } from 'react-router-dom'
+import { atom, useAtom } from 'jotai'
 
 const menuItems = [
 	{ listName: 'emoji on mouseover', pathName: 'emojiOnMouse' },
@@ -42,12 +43,20 @@ const MenuItem = ({ text, selected, onClick, pathName }) => {
 	)
 }
 
+const sideBarWidthAtom = atom(null)
+
 const Sidebar = () => {
 	const [selected, setSelected] = useState(0)
+	const [ref, { width, height }] = useMeasure()
+	const [sidebarWidth, setSideBarWidth] = useAtom(sideBarWidthAtom)
+
+	useEffect(() => {
+		sidebarWidth(width)
+	}, [])
 
 	return (
 		<>
-			<nav className="sidebar">
+			<nav className="sidebar" ref={ref}>
 				<ol>
 					{menuItems.map((value, index) => (
 						<MenuItem

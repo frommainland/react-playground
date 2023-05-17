@@ -7,6 +7,7 @@
 	flex-direction: column;
 	gap: 1rem;
 	.image {
+		position: relative;
 		width: 400px;
 		height: 600px;
 		background: url(./image/ernest-malimon-F-VfOii6noA-unsplash.webp);
@@ -16,6 +17,23 @@
 			0px 49px 49px rgba(0, 0, 0, 0.09), 0px 12px 27px rgba(0, 0, 0, 0.1),
 			0px 0px 0px rgba(0, 0, 0, 0.1);
 		border-radius: 16px;
-        cursor: pointer;
+		overflow: hidden;
+		cursor: pointer;
+		.long-press-mask {
+			width: 100%;
+			height: 100%;
+			position: relative;
+			top: 0;
+			left: 0;
+			background-color: black;
+			opacity: 0.4;
+			.hallow-circle {
+				position: absolute;
+				width: 60px;
+				height: 60px;
+				border: 4px solid rgba(255, 255, 255, 0.5);
+				border-radius: 50%;
+			}
+		}
 	}
 }

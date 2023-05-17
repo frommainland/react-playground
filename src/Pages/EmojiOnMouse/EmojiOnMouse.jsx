@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { emojisData } from './EmojiData'
 import './EmojiOnMouse.scss'
+import { motion } from 'framer-motion'
 import useMousePosition from '../../helper/hooks/useMousePosition'
+import { smooth } from '../../helper/easing'
 
 function rdm(min, max) {
 	return Math.floor(Math.random() * (max - min + 1) + min)
@@ -9,17 +11,21 @@ function rdm(min, max) {
 
 const EmojiItem = ({ pageX, pageY, text, fontSize, rotate }) => {
 	return (
-		<div
+		<motion.div
+			initial={{ scale: 0 }}
+			animate={{ scale: 1, rotate: rotate }}
+			transition={{ ease: smooth }}
 			className="logo"
 			style={{
 				left: pageX,
 				top: pageY,
 				fontSize: fontSize,
-				transform: `translate(-50%, -50%) rotate(${rotate}deg)`,
+				// transform: `translate(-50%, -50%) rotate(${rotate}deg)`,
+				transform: `translate(-50%, -50%)`,
 			}}
 		>
 			{text}
-		</div>
+		</motion.div>
 	)
 }
 
