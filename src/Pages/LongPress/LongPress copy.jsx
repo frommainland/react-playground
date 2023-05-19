@@ -17,7 +17,6 @@ function degrees_to_radians(degrees) {
 
 // three dots radius
 const threeDotsR = 180 / 2
-const threeDotsHoverR = 20
 
 const LongPress = () => {
 	// get image div distances to the left and top of the viewport
@@ -84,13 +83,16 @@ const LongPress = () => {
 									}}
 									animate={{
 										x:
-											touchCircle.x - bounds.x <=
-											bounds.width / 3
+											touchCircle.x -
+												bounds.x -
+												30 +
+												threeDotsR <=
+											bounds.width / 2
 												? Math.cos(
 														degrees_to_radians(
 															map(
 																touchCircle.y -
-																	bounds.y,
+																	340,
 																0,
 																600,
 																270,
@@ -102,25 +104,11 @@ const LongPress = () => {
 												  (touchCircle.x -
 														bounds.x -
 														30)
-												: touchCircle.x - bounds.x <=
-														(bounds.width / 3) *
-															2 &&
-												  touchCircle.x - bounds.x >
-														bounds.width / 3
-												? Math.cos(
-														degrees_to_radians(
-															315 - value
-														)
-												  ) *
-														threeDotsR +
-												  (touchCircle.x -
-														bounds.x -
-														30)
 												: Math.cos(
 														degrees_to_radians(
 															map(
 																touchCircle.y -
-																	bounds.y,
+																	340,
 																0,
 																600,
 																180,
@@ -133,13 +121,16 @@ const LongPress = () => {
 														bounds.x -
 														30),
 										y:
-											touchCircle.x - bounds.x <=
-											bounds.width / 3
+											touchCircle.x -
+												bounds.x -
+												30 +
+												threeDotsR <=
+											bounds.width / 2
 												? Math.sin(
 														degrees_to_radians(
 															map(
 																touchCircle.y -
-																	bounds.y,
+																	340,
 																0,
 																600,
 																270,
@@ -152,30 +143,11 @@ const LongPress = () => {
 												  (touchCircle.y -
 														bounds.y -
 														30)
-												: touchCircle.x - bounds.x <=
-														(bounds.width / 3) *
-															2 &&
-												  touchCircle.x - bounds.x >
-														bounds.width / 3
-												? Math.sin(
-														degrees_to_radians(
-															315 - value
-														)
-												  ) *
-														threeDotsR *
-														(touchCircle.y -
-															bounds.y <
-														bounds.height / 2
-															? -1
-															: 1) +
-												  (touchCircle.y -
-														bounds.y -
-														30)
 												: Math.sin(
 														degrees_to_radians(
 															map(
 																touchCircle.y -
-																	bounds.y,
+																	340,
 																0,
 																600,
 																180,
@@ -189,109 +161,47 @@ const LongPress = () => {
 														bounds.y -
 														30),
 									}}
-									// transition={{
-									// 	type: 'spring',
-									// 	bounce: 0.4,
-									// }}
-									// whileHover={{
-									// 	x:
-									//     touchCircle.x - bounds.x <= bounds.width / 3
-									// 			? Math.cos(
-									// 					degrees_to_radians(
-									// 						map(
-									// 							touchCircle.y -
-									// 								340,
-									// 							0,
-									// 							600,
-									// 							270,
-									// 							360
-									// 						) + value
-									// 					)
-									// 			  ) *
-									// 					threeDotsR + threeDotsHoverR +
-									// 			  (touchCircle.x -
-									// 					bounds.x -
-									// 					30)
-									// 			: touchCircle.x - bounds.x <= bounds.width / 3 *2 && touchCircle.x - bounds.x > bounds.width / 3
-									//             ? Math.cos(
-									// 					degrees_to_radians(
-									// 						315 - value
-									// 					)
-									// 			  ) *
-									// 					threeDotsR +threeDotsHoverR +
-									// 			  (touchCircle.x -
-									// 					bounds.x -
-									// 					30)
-									//             :Math.cos(
-									// 					degrees_to_radians(
-									// 						map(
-									// 							touchCircle.y -
-									// 								340,
-									// 							0,
-									// 							600,
-									// 							180,
-									// 							270
-									// 						) - value
-									// 					)
-									// 			  ) *
-									// 					threeDotsR +threeDotsHoverR +
-									// 			  (touchCircle.x -
-									// 					bounds.x -
-									// 					30),
+									transition={{
+										type: 'spring',
+										bounce: 0.4,
+									}}
+									whileHover={{
+										x:
+											Math.cos(
+												degrees_to_radians(
+													map(
+														touchCircle.y - 340,
+														0,
+														600,
+														270,
+														360
+													) + value
+												)
+											) *
+												(threeDotsR + 20) +
+											(touchCircle.x - bounds.x - 30),
 
-									// 	y:
-									//     touchCircle.x - bounds.x <= bounds.width / 3
-									// 			? Math.sin(
-									// 					degrees_to_radians(
-									// 						map(
-									// 							touchCircle.y -
-									// 								340,
-									// 							0,
-									// 							600,
-									// 							270,
-									// 							360
-									// 						) + value
-									// 					)
-									// 			  ) *
-									// 					(threeDotsR + threeDotsHoverR) *
-									// 					-1 +
-									// 			  (touchCircle.y -
-									// 					bounds.y -
-									// 					30)
-									// 			: touchCircle.x - bounds.x <= bounds.width / 3 *2 && touchCircle.x - bounds.x > bounds.width / 3
-									//             ?Math.sin(
-									// 					degrees_to_radians(
-									// 						315 - value
-									// 					)
-									// 			  ) *
-									// 					(threeDotsR + threeDotsHoverR) * (touchCircle.y - bounds.y < bounds.height /2 ? -1 : 1)
-									// 					 +
-									// 			  (touchCircle.y -
-									// 					bounds.y -
-									// 					30)
-									//             :Math.sin(
-									// 					degrees_to_radians(
-									// 						map(
-									// 							touchCircle.y -
-									// 								340,
-									// 							0,
-									// 							600,
-									// 							180,
-									// 							270
-									// 						) - value
-									// 					)
-									// 			  ) *
-									// 					threeDotsR + threeDotsHoverR *
-									// 					1 +
-									// 			  (touchCircle.y -
-									// 					bounds.y -
-									// 					30),
-									// 	backgroundColor: '#E60022',
-									// 	scale: 1.1,
-									// 	transition: {
-									// 		type: 'tween',
-									// 	},
-									// }}
+										y:
+											Math.sin(
+												degrees_to_radians(
+													map(
+														touchCircle.y - 340,
+														0,
+														600,
+														270,
+														360
+													) + value
+												)
+											) *
+												(threeDotsR + 20) *
+												-1 +
+											(touchCircle.y - bounds.y - 30),
+										backgroundColor: '#E60022',
+                                        scale:1.1,
+										transition: {
+											type: 'tween',
+										},
+									}}
 								></motion.div>
 							)
 						})}

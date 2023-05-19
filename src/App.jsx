@@ -94,6 +94,7 @@ function App() {
 		<>
 			<Routes>
 				<Route path="/" element={<Sidebar />}>
+					<Route index element={<EmojiOnMouse />} />
 					{menuItems.map((value, index) => {
 						return (
 							<Route
