@@ -5,14 +5,14 @@
 	min-height: 100vh;
 	background-color: var(--green2);
 	z-index: -2;
+	font-family: var(--apercu-bold);
 	ol {
 		padding-left: 12px;
 		a {
-            text-decoration: none;
+			text-decoration: none;
 			li {
 				list-style-position: inside;
 				box-sizing: content-box;
-				font-family: 'IBM Plex Mono';
 				font-style: normal;
 				font-weight: 600;
 				font-size: 16px;

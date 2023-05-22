@@ -1,4 +1,6 @@
 import './App.scss'
+import './font.scss'
+import './component/Sidebar.scss'
 import { Routes, Route, Outlet, Link } from 'react-router-dom'
 import EmojiOnMouse from './Pages/EmojiOnMouse/EmojiOnMouse'
 import LongPress from './Pages/LongPress/LongPress'
