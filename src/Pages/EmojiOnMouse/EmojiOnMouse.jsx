@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { emojisData } from './EmojiData'
 import './EmojiOnMouse.scss'
 import { motion } from 'framer-motion'
@@ -30,49 +30,36 @@ const EmojiItem = ({ pageX, pageY, text, fontSize, rotate }) => {
 }
 
 const EmojiOnMouse = () => {
+	const mousePosition = useMousePosition()
+	const [emojiArray, setEmojiArray] = useState([])
+	const [move, setMove] = useState(0)
+
 	const ref = useRef(null)
 
-	const [emojiArray, setEmojiArray] = useState([])
-
-	useEffect(() => {
+	function becool() {
 		const refCurrent = ref.current
-		// Track mouse position
-		const handleMove = (e) => {
-			let text = emojisData[rdm(0, emojisData.length - 1)]
-			let fontSize = rdm(40, 160)
-			let rotate = rdm(0, 360)
-			let pageX = e.clientX - refCurrent.getBoundingClientRect().left - fontSize/2
-			let pageY = e.clientY - fontSize/2
+		let text = emojisData[rdm(0, emojisData.length - 1)]
+		let pageX = mousePosition.x - refCurrent.getBoundingClientRect().left
+		let pageY = mousePosition.y
+		let fontSize = rdm(40, 160)
+		let rotate = rdm(0, 360)
+		setMove((move) => move + 1)
+		if (move % 7 === 0) {
 			setEmojiArray((pre) => [
 				...pre,
 				[text, pageX, pageY, fontSize, rotate],
 			])
 		}
-		window.addEventListener('mousemove', handleMove)
-
-		// Clean up
-		return () => {
-			window.removeEventListener('mousemove', handleMove)
-		}
-	}, [])
-
-	const memoizedPositionArray = useMemo(() => {
-		const positionArray = []
-		window.addEventListener('mousemove', (event) => {
-			positionArray.push({ x: event.clientX, y: event.clientY })
-		})
-		return positionArray
-	}, [])
+	}
 
 	return (
 		<>
-			{/* <div className="emoji-bg-text">
+			<div className="emoji-bg-text">
 				<p>How to improve this page performance?</p>
 				<p>Please let me know</p>
 				<a href="mailto:caihehuang@gmail.com">caihehuang@gmail.com</a>
-			</div> */}
-
-			<div className="emoji-bg" ref={ref}>
+			</div>
+			<div className="emoji-bg" onMouseMove={becool} ref={ref}>
 				{emojiArray.map((value, index) => {
 					return (
 						<EmojiItem

@@ -1,0 +1,72 @@
+#scroll-velocity-wrap {
+	position: relative;
+	height: 100vh;
+	overflow: hidden;
+	.content-wrap {
+		height: 100%;
+		display: flex;
+		justify-content: center;
+		font-style: normal;
+		font-size: 24px;
+		line-height: 150%;
+		color: var(--green3);
+		gap: 2em;
+		.left {
+			font-family: var(--apercu-bold);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+		.right {
+			font-family: var(--apercu-regular);
+			position: relative;
+			.container {
+				// height: 100vh;
+				// overflow: hidden;
+				.scrolling {
+					margin-top: 1em;
+				}
+			}
+		}
+	}
+	.gradient-blur {
+		position: absolute;
+		height: 45vh;
+		pointer-events: none;
+		width: 100%;
+		inset: auto 0 0 0;
+		div {
+			position: absolute;
+			inset: 0;
+		}
+	}
+
+	.gradient-blur-top {
+		top: 0;
+		transform: rotate(180deg);
+	}
+
+	.gradient-blur-bottom {
+		bottom: 0;
+	}
+
+	.bottom {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 2em;
+		width: 100%;
+		height: 64px;
+		position: absolute;
+		z-index: 10;
+		bottom: 0;
+		background-color: var(--green1);
+		border-top: 1px solid var(--green2);
+		font-family: var(--apercu-regular);
+		color: var(--green3);
+		font-size: 14px;
+		a {
+			color: var(--green3);
+		}
+	}
+}
