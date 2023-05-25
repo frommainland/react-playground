@@ -9,9 +9,11 @@ import {
 } from 'framer-motion'
 import useWindowSize from '../../helper/hooks/useWindowSize'
 import { useRef } from 'react'
-import { useState, useCallback, useLayoutEffect, useEffect } from 'react'
+import { useState, useCallback, useLayoutEffect } from 'react'
+import { useScrollDirection } from '../../helper/hooks/useScrollDirection'
 
-//test scrollY detection and velocity
+//test
+// works for infinite scrolling, but not reponse with scrollY detection and velocity
 
 const designPrinciples = [
 	'is innovative',
@@ -42,13 +44,6 @@ const loopTimes = Array.from(Array(4).keys())
 
 const blurLayerNum = Array.from(Array(8).keys())
 
-const data = {
-	ease: 0.02,
-	current: 0,
-	previous: 0,
-	rounded: 0,
-}
-
 function InfiniteScrollLoop({ surroundingBackup = 2, children }) {
 	const size = useWindowSize()
 	const contentRef = useRef(null)
@@ -57,52 +52,14 @@ function InfiniteScrollLoop({ surroundingBackup = 2, children }) {
 
 	const backupHeight = height * surroundingBackup
 
-	///
-
-	useEffect(() => {
-		requestAnimationFrame(() => skewScrolling())
-	}, [])
-
-	const skewScrolling = () => {
-		//Set Current to the scroll position amount
-		data.current = scrollRef.current.scrollTop
-		// Set Previous to the scroll previous position
-		data.previous += (data.current - data.previous) * data.ease
-		// Set rounded to
-		data.rounded = Math.round(data.previous * 100) / 100
-
-		// Difference between
-		const difference = data.current - data.rounded
-		const acceleration = difference / size.width
-		const velocity = +acceleration
-		const skew = velocity * 25
-
-		//Assign skew and smooth scrolling to the scroll container
-		scrollRef.current.style.transform = `skewY(${skew}deg)`
-
-		//loop vai raf
-		requestAnimationFrame(() => skewScrolling())
-	}
-
-	///
-
 	const handleScroll = useCallback(() => {
 		if (scrollRef.current) {
 			const scroll = scrollRef.current.scrollTop
 			if (scroll < backupHeight || scroll >= backupHeight + height) {
 				scrollRef.current.scrollTop = backupHeight + (scroll % height)
 			}
+            console.log(scroll)
 		}
-
-		// data.current = scrollRef.current.scrollTop
-		// data.previous += (data.current - data.previous) * data.ease
-		// data.rounded = Math.round(data.previous * 100) / 100
-		// const difference = data.current - data.rounded
-		// const acceleration = difference / size.width
-		// const velocity = +acceleration
-		// const skew = velocity * 7.5
-		// scrollRef.current.style.transform = `skewY(${skew}deg)`
-		// skewScrolling()
 	}, [height])
 
 	useLayoutEffect(() => {
@@ -139,7 +96,7 @@ function InfiniteScrollLoop({ surroundingBackup = 2, children }) {
 	)
 }
 
-const ScrollVelocity = () => {
+const ScrollVelocity = ({ children }) => {
 	const size = useWindowSize()
 
 	return (
@@ -154,8 +111,8 @@ const ScrollVelocity = () => {
 									<motion.p
 										className="scrolling"
 										key={index}
-										// initial={{ y: 0 }}
-										// animate={{ y: -size.height }}
+										initial={{ y: 0 }}
+										animate={{ y: -size.height }}
 										transition={{
 											repeat: Infinity,
 											duration: 30,

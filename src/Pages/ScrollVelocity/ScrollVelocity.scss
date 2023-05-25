@@ -20,9 +20,18 @@
 		.right {
 			font-family: var(--apercu-regular);
 			position: relative;
+			will-change: transform;
 			.container {
-				// height: 100vh;
-				// overflow: hidden;
+				.infinite-scroll-loop-outer {
+					position: relative;
+					.infinite-scroll-loop-inner {
+						overflow-y: scroll;
+						scrollbar-width: none;
+					}
+					::-webkit-scrollbar {
+						display: none;
+					}
+				}
 				.scrolling {
 					margin-top: 1em;
 				}
