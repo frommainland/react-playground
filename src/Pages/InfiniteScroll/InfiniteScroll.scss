@@ -33,7 +33,18 @@
 					}
 				}
 				.scrolling {
-					margin-top: 1em;
+					margin-top: 3em;
+					margin-bottom: 3em;
+					sup {
+						padding: 5px 5px;
+						background-color: var(--green3);
+						border-radius: 100px;
+						color: var(--green1);
+						font-size: 12px;
+						font-family: var(--apercu-bold);
+						margin-left: 0.5em;
+						line-height: 100%;
+					}
 				}
 			}
 		}

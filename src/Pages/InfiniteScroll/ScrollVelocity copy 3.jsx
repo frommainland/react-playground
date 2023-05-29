@@ -11,7 +11,7 @@ import useWindowSize from '../../helper/hooks/useWindowSize'
 import { useRef } from 'react'
 import { useState, useCallback, useLayoutEffect, useEffect } from 'react'
 
-//test scrollY detection and velocity
+//test scrollY detection and velocity. it is jumpy and not smooth during scroll
 
 const designPrinciples = [
 	'is innovative',

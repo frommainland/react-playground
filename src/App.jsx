@@ -4,7 +4,7 @@ import './component/Sidebar.scss'
 import { Routes, Route, Outlet, Link } from 'react-router-dom'
 import EmojiOnMouse from './Pages/EmojiOnMouse/EmojiOnMouse'
 import LongPress from './Pages/LongPress/LongPress'
-import ScrollVelocity from './Pages/ScrollVelocity/ScrollVelocity'
+import InfiniteScroll from './Pages/InfiniteScroll/InfiniteScroll'
 import NoMatch from './Pages/NoMatch'
 
 import React, { useState, useEffect } from 'react'
@@ -25,9 +25,9 @@ const menuItems = [
 		element: <LongPress />,
 	},
 	{
-		listName: 'scroll velocity',
-		pathName: 'ScrollVelecity',
-		element: <ScrollVelocity />,
+		listName: 'infinite scroll',
+		pathName: 'InfiniteScroll',
+		element: <InfiniteScroll />,
 	},
 	{ listName: 'animation based on time', pathName: 'TimeElaspedAnimation' },
 ]
