@@ -5,7 +5,7 @@ import { Routes, Route, Outlet, Link } from 'react-router-dom'
 import EmojiOnMouse from './Pages/EmojiOnMouse/EmojiOnMouse'
 import LongPress from './Pages/LongPress/LongPress'
 import InfiniteScroll from './Pages/InfiniteScroll/InfiniteScroll'
-import RandomSparkle from './Pages/RandomSparkle/RandomSparkle'
+import HoverSparkle from './Pages/HoverSparkle/HoverSparkle'
 import NoMatch from './Pages/NoMatch'
 
 import React, { useState, useEffect } from 'react'
@@ -31,9 +31,9 @@ const menuItems = [
 		element: <InfiniteScroll />,
 	},
 	{
-		listName: 'random sparkle',
-		pathName: 'RandomSparkle',
-		element: <RandomSparkle />,
+		listName: 'hover sparkle',
+		pathName: 'HoverSparkle',
+		element: <HoverSparkle />,
 	},
 ]
 

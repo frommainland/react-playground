@@ -3,7 +3,8 @@ import './RandomSparkle.scss'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useRef } from 'react'
 
-// test for onanimationcomplte => remove it from the dom
+// test for onanimationcomplte => remove it from the dom 
+// not working it seams i am manipulating the array (add/remove) it at the same time.
 
 function useInterval(callback, delay) {
 	const intervalRef = React.useRef(null)
