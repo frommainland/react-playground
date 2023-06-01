@@ -1,10 +1,62 @@
+
 .sparkle-wrap {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	flex-direction: column;
 	height: 100%;
+	gap: 4rem;
 	.svgSparkle {
-		animation: grow .8s ease-in-out forwards;
+		// animation: grow 0.8s ease-in-out forwards;
+		pointer-events: none;
+	}
+	.content-wrapper {
+		position: relative;
+		z-index: 1;
+		.pearl-ring {
+			background-image: url('./image/pearlring.webp');
+			height: 600px;
+			min-height: 20vw;
+			aspect-ratio: 5/6;
+			-webkit-mask-image: url('./image/mask.svg');
+			-webkit-mask-repeat: no-repeat;
+			-webkit-mask-position: center;
+			-webkit-mask-size: contain;
+			cursor: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAHwSURBVHgB7ZiNbYMwEIWPLtCMkBEyAt0gI9ANsgHdoN0gjNANYIN2A9ig7QSvtjAqoYfB5gyOxCdZJLJzx/PP8QjRzs7Ozl0A4KRaSguRitPx4DD2otqZliMVxw01a7VqX7QQqTiuSc/4IyVPpOL4JC56iUvyRCqOS8JUJ8J/rno2147jkuxN71NMU5ubOIWKMwVXhb5VO5jrFHrcj7mGiuMP2kNXMDNWweEQSsXxBrf790qeSMXxSZz2Ep8nxh5UO+rrkjjimMNYW/q5SlOrlrnECQbainId6cthp+xWxBYnKGaGuXKZYR4fZnuxcTbDbJMhjU0ExQJuD2XHyfQdR8RtIwKMj2e2z/ugP7gI6feBx/6XJEkadXlSrRmM06tUrroSYHy8meEhOfPbV2x5JmDx8eBdZt7rz2EnvAhYfLxZBc5x5pi++bAiMNPHoz3gc2yz5oKQBxuePn6miMzkEKtOYu8DquJ8Ultxxn73rMYU+sNq1QkePt6yElx1WudhB0cfH50IePj4GEU4+/ioRMDTxwuJWP4fEhb4eCERF9oSARHrv4YyN+YqYjj2SFvjKKKJToBmjgjwVj2q19ExESVafzXsqyg24OZiM4qRmSJeKGbMfq+YG9fCrPU/oYhAW2X0w1If1kbZ7op2dsLyC3iJlvn15GscAAAAAElFTkSuQmCC'),
+				auto;
+		}
+	}
+	.bottom-nav {
+		display: flex;
+		gap: 2rem;
+		@for $i from 1 through 8 {
+			li:nth-child(#{$i}) {
+				background-image: url(./image/shape#{$i}.svg);
+				background-repeat: no-repeat;
+				background-position: center;
+				width: 45px;
+				aspect-ratio: 1;
+				list-style-type: none;
+				position: relative;
+                border-radius: 16px;
+                cursor: pointer;
+			}
+		}
+		li {
+			.underline {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				top: 0;
+				left: 0;
+				border-radius: 16px;
+				border: 2px solid var(--green3);
+			}
+		}
+        li:hover {
+            background-color: var(--green2);
+            
+        }
 	}
 
 	@keyframes grow {

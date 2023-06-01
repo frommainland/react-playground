@@ -1,10 +1,22 @@
-import React, { useLayoutEffect, useState } from 'react'
+import React, { useState } from 'react'
 import './HoverSparkle.scss'
 import { motion } from 'framer-motion'
-import { useRef } from 'react'
+import { sparkleSvgShapes } from './SVgShapes'
+import styled, { keyframes } from 'styled-components'
 
 // josh'way
-
+//range to generate array
+const range = (start, end, step = 1) => {
+	let output = []
+	if (typeof end === 'undefined') {
+		end = start
+		start = 0
+	}
+	for (let i = start; i < end; i += step) {
+		output.push(i)
+	}
+	return output
+}
 // Utility helper for random number generation
 const random = (min, max) => Math.floor(Math.random() * (max - min)) + min
 const useRandomInterval = (callback, minDelay, maxDelay) => {
@@ -36,12 +48,14 @@ const useRandomInterval = (callback, minDelay, maxDelay) => {
 
 const SparkleColor = 'hsl(50deg, 100%, 50%)'
 
-const generateSparkle = (color = SparkleColor) => {
+const generateSparkleData = (color = SparkleColor) => {
+	const time = Date.now()
 	return {
 		id: crypto.randomUUID(),
 		createdAt: Date.now(),
-		color,
-		size: random(20, 40),
+		// color,
+		color: `hsl(${time % 360}deg, 100%, 50%)`,
+		size: random(20, 90),
 		style: {
 			top: `${random(0, 100)}%`,
 			left: `${random(0, 100)}%`,
@@ -51,66 +65,132 @@ const generateSparkle = (color = SparkleColor) => {
 	}
 }
 
-function SparkleInstance({ color, size, style }) {
+const sparkleAnimation = keyframes`
+  0% {
+    transform: scale(0) rotate(0deg);
+  }
+  50% {
+    transform: scale(1) rotate(90deg);
+  }
+  100% {
+    transform: scale(0) rotate(180deg);
+  }
+`
+
+const spin = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(180deg);
+  }
+`
+
+const Svg = styled.svg`
+	pointer-events: none;
+	animation: ${sparkleAnimation} 0.6s ease-in-out forwards,
+    scale
+`
+
+function SparkleDom({ color, size, style, selectShape }) {
 	return (
-		<motion.svg
+		<Svg
 			xmlns="http://www.w3.org/2000/svg"
 			width={size}
 			height={size}
 			fill={color}
-			viewBox="0 0 88 87"
+			viewBox="0 0 88 88"
 			style={style}
 			className="svgSparkle"
-			// animate={{ scale: [0, 1, 0], rotate: [0, 180] }}
-			// transition={{
-			// 	duration: 1,
-			// 	ease: 'easeInOut',
-			// }}
 		>
-			<path d="M47.51 70.387a30.94 30.94 0 018.647-15.726 30.687 30.687 0 0115.891-8.233L88 43.5l-15.953-2.928h.002a30.688 30.688 0 01-15.892-8.233 30.94 30.94 0 01-8.646-15.726L44 0 40.49 16.613a30.942 30.942 0 01-8.647 15.726 30.687 30.687 0 01-15.891 8.233L0 43.5l15.953 2.928h-.002a30.688 30.688 0 0115.892 8.233 30.941 30.941 0 018.646 15.726L44 87l3.511-16.613z"></path>
-		</motion.svg>
+			<path d={sparkleSvgShapes[selectShape]}></path>
+		</Svg>
+	)
+}
+
+function SparkleWrapper({ children, selectShape }) {
+	const [sparklesData, setSparkleData] = useState([])
+	const [isHover, setIsHover] = useState(false)
+
+	useRandomInterval(
+		() => {
+			const sparkleItem = generateSparkleData()
+
+			const filterSparkleItem = sparklesData.filter((v) => {
+				const now = Date.now()
+				const delta = now - v.createdAt
+				return delta < 1000
+			})
+			filterSparkleItem.push(sparkleItem)
+			setSparkleData(filterSparkleItem)
+		},
+		// isHover ? 100 : null,
+		// isHover ? 350 : null
+		100,
+		550
+	)
+
+	return (
+		<span
+			style={{ position: 'relative', display: 'inline-block' }}
+			onMouseEnter={() => setIsHover(true)}
+			onMouseLeave={() => setIsHover(false)}
+		>
+			{sparklesData.map((sparkle) => {
+				return (
+					<SparkleDom
+						color={sparkle.color}
+						size={sparkle.size}
+						style={sparkle.style}
+						key={sparkle.id}
+						selectShape={selectShape}
+					/>
+				)
+			})}
+			<span className="content-wrapper">{children}</span>
+		</span>
+	)
+}
+
+function BottomNav({ passShape }) {
+	const [selectTab, setSelectTab] = useState(0)
+	return (
+		<ul className="bottom-nav">
+			{range(8).map((v, i) => {
+				return (
+					<li
+						key={i}
+						onClick={() => {
+							setSelectTab(i)
+							passShape(i)
+						}}
+					>
+						{i === selectTab ? (
+							<motion.div
+								className="underline"
+								layoutId="underline"
+							/>
+						) : null}
+					</li>
+				)
+			})}
+		</ul>
 	)
 }
 
 const HoverSparkle = () => {
-	const [sparkles, setSparkles] = React.useState([])
+	const [selectShape, setSelectShape] = useState(0)
 
-	useRandomInterval(
-		() => {
-			const now = Date.now()
-			const newSparkle = generateSparkle()
-
-			//start as an empty array
-			const nextSparkles = sparkles.filter((value) => {
-				const delta = now - value.createdAt
-				return delta < 1100
-			})
-			nextSparkles.push(newSparkle)
-
-			setSparkles(nextSparkles)
-		},
-		100,
-		500
-	)
-
+	function passShape(value) {
+		setSelectShape(value)
+	}
 
 	return (
 		<div className="sparkle-wrap">
-			<span style={{ position: 'relative', display: 'inline-block' }}>
-				{sparkles.map((sparkle) => {
-					return (
-						<SparkleInstance
-							color={sparkle.color}
-							size={sparkle.size}
-							style={sparkle.style}
-							key={sparkle.id}
-						/>
-					)
-				})}
-				<span style={{ position: 'relative', zIndex: '1' }}>
-					<h1>123</h1>
-				</span>
-			</span>
+			<SparkleWrapper selectShape={selectShape}>
+				<div className="pearl-ring"></div>
+			</SparkleWrapper>
+			<BottomNav passShape={passShape} />
 		</div>
 	)
 }
