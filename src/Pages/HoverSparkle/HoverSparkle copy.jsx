@@ -1,30 +1,10 @@
 import React, { useState } from 'react'
 import './HoverSparkle.scss'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { sparkleSvgShapes } from './SVgShapes'
 import styled, { keyframes } from 'styled-components'
-import { smooth } from '../../helper/easing'
-import pearl from './image/pearlring.webp'
-import baltasar from './image/Baltasar-de-Echave.webp'
-import jane from './image/JaneSeymour.webp'
-import lady from './image/LadywithaSquirrel1.webp'
-import maria from './image/MariaKitscher.webp'
-import noblewoman from './image/Noblewoman.webp'
-import cleo from './image/PortraitofCleopheaKriegvonBellikon.webp'
-import younglady from './image/YoungLady.webp'
 
 // josh'way
-
-const paintings = [
-	pearl,
-	baltasar,
-	jane,
-	lady,
-	maria,
-	noblewoman,
-	cleo,
-	younglady,
-]
 //range to generate array
 const range = (start, end, step = 1) => {
 	let output = []
@@ -207,20 +187,7 @@ const HoverSparkle = () => {
 	return (
 		<div className="sparkle-wrap">
 			<SparkleWrapper selectShape={selectShape}>
-				<AnimatePresence mode="wait">
-					<motion.img
-						src={paintings[selectShape]}
-						alt="paintings"
-						className="painting"
-						key={selectShape}
-						initial={{ filter: 'blur(20px)' }}
-						animate={{ filter: 'blur(0px)' }}
-						exit={{ filter: 'blur(20px)' }}
-						transition={{ ease: 'backInOut', duration: 0.35 }}
-					/>
-				</AnimatePresence>
-
-				{/* <div className="pearl-ring"></div> */}
+				<div className="pearl-ring"></div>
 			</SparkleWrapper>
 			<BottomNav passShape={passShape} />
 		</div>

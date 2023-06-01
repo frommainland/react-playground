@@ -1,4 +1,3 @@
-
 .sparkle-wrap {
 	display: flex;
 	justify-content: center;
@@ -13,11 +12,11 @@
 	.content-wrapper {
 		position: relative;
 		z-index: 1;
-		.pearl-ring {
-			background-image: url('./image/pearlring.webp');
+		.painting {
+			// background-image: url('./image/pearlring.webp');
 			height: 600px;
 			min-height: 20vw;
-			aspect-ratio: 5/6;
+			// aspect-ratio: 5/6;
 			-webkit-mask-image: url('./image/mask.svg');
 			-webkit-mask-repeat: no-repeat;
 			-webkit-mask-position: center;
@@ -38,8 +37,8 @@
 				aspect-ratio: 1;
 				list-style-type: none;
 				position: relative;
-                border-radius: 16px;
-                cursor: pointer;
+				border-radius: 16px;
+				cursor: pointer;
 			}
 		}
 		li {
@@ -53,10 +52,9 @@
 				border: 2px solid var(--green3);
 			}
 		}
-        li:hover {
-            background-color: var(--green2);
-            
-        }
+		li:hover {
+			background-color: var(--green2);
+		}
 	}
 
 	@keyframes grow {
