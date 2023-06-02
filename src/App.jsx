@@ -31,8 +31,8 @@ const menuItems = [
 		element: <InfiniteScroll />,
 	},
 	{
-		listName: 'hover sparkle',
-		pathName: 'HoverSparkle',
+		listName: 'pick sparkle',
+		pathName: 'PickSparkle',
 		element: <HoverSparkle />,
 	},
 ]
@@ -53,8 +53,8 @@ const MenuItem = ({ text, selected, onClick, pathName }) => {
 				{text}
 				{selected && (
 					<motion.div
-						className="underline"
-						layoutId="underline"
+						className="sidebar-underline"
+						layoutId="sidebar-underline"
 						style={{
 							width: width + 10,
 							height: height + 20,

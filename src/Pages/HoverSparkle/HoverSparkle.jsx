@@ -1,30 +1,21 @@
 import React, { useState } from 'react'
 import './HoverSparkle.scss'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { sparkleSvgShapes } from './SVgShapes'
-import styled, { keyframes } from 'styled-components'
-import { smooth } from '../../helper/easing'
-import pearl from './image/pearlring.webp'
-import baltasar from './image/Baltasar-de-Echave.webp'
-import jane from './image/JaneSeymour.webp'
-import lady from './image/LadywithaSquirrel1.webp'
-import maria from './image/MariaKitscher.webp'
-import noblewoman from './image/Noblewoman.webp'
-import cleo from './image/PortraitofCleopheaKriegvonBellikon.webp'
-import younglady from './image/YoungLady.webp'
+import styled from 'styled-components'
+import {
+	sparkleAnimation,
+	tada,
+	flash,
+	swing,
+	jello,
+	heartBeat,
+	magic,
+	vanish,
+} from './AnimateStyles'
 
 // josh'way
 
-const paintings = [
-	pearl,
-	baltasar,
-	jane,
-	lady,
-	maria,
-	noblewoman,
-	cleo,
-	younglady,
-]
 //range to generate array
 const range = (start, end, step = 1) => {
 	let output = []
@@ -85,32 +76,26 @@ const generateSparkleData = (color = SparkleColor) => {
 	}
 }
 
-const sparkleAnimation = keyframes`
-  0% {
-    transform: scale(0) rotate(0deg);
-  }
-  50% {
-    transform: scale(1) rotate(90deg);
-  }
-  100% {
-    transform: scale(0) rotate(180deg);
-  }
-`
-
-const spin = keyframes`
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(180deg);
-  }
-`
-
 const Svg = styled.svg`
 	pointer-events: none;
-	animation: ${sparkleAnimation} 0.6s ease-in-out forwards;
+	animation: ${(props) =>
+			props.selectShape == 0
+				? sparkleAnimation
+				: props.selectShape == 1
+				? tada
+				: props.selectShape == 2
+				? flash
+				: props.selectShape == 3
+				? jello
+				: props.selectShape == 4
+				? swing
+				: props.selectShape == 5
+				? heartBeat
+				: props.selectShape == 6
+				? vanish
+				: magic}
+		2s ease-in-out forwards;
 `
-
 function SparkleDom({ color, size, style, selectShape }) {
 	return (
 		<Svg
@@ -121,6 +106,7 @@ function SparkleDom({ color, size, style, selectShape }) {
 			viewBox="0 0 88 88"
 			style={style}
 			className="svgSparkle"
+			selectShape={selectShape}
 		>
 			<path d={sparkleSvgShapes[selectShape]}></path>
 		</Svg>
@@ -138,7 +124,7 @@ function SparkleWrapper({ children, selectShape }) {
 			const filterSparkleItem = sparklesData.filter((v) => {
 				const now = Date.now()
 				const delta = now - v.createdAt
-				return delta < 1000
+				return delta < 2100
 			})
 			filterSparkleItem.push(sparkleItem)
 			setSparkleData(filterSparkleItem)
@@ -207,20 +193,19 @@ const HoverSparkle = () => {
 	return (
 		<div className="sparkle-wrap">
 			<SparkleWrapper selectShape={selectShape}>
-				<AnimatePresence mode="wait">
+				{/* <AnimatePresence mode="wait">
 					<motion.img
 						src={paintings[selectShape]}
 						alt="paintings"
 						className="painting"
 						key={selectShape}
-						initial={{ filter: 'blur(20px)' }}
-						animate={{ filter: 'blur(0px)' }}
-						exit={{ filter: 'blur(20px)' }}
+						initial={{ opacity: 1 }}
+						animate={{ opacity: 1 }}
+						exit={{ opacity: 0 }}
 						transition={{ ease: 'backInOut', duration: 0.35 }}
 					/>
-				</AnimatePresence>
-
-				{/* <div className="pearl-ring"></div> */}
+				</AnimatePresence> */}
+				<div className="painting"></div>
 			</SparkleWrapper>
 			<BottomNav passShape={passShape} />
 		</div>
