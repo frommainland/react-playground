@@ -84,7 +84,7 @@ function InfiniteScrollLoop({ surroundingBackup = 1, children }) {
 					.fill()
 					.map((_, index) => (
 						<motion.div
-							key={index}
+							key={`${index}a`}
 							initial={{ y: 0 }}
 							animate={{
 								y: -height,
@@ -118,7 +118,7 @@ function InfiniteScrollLoop({ surroundingBackup = 1, children }) {
 					.fill()
 					.map((_, index) => (
 						<motion.div
-							key={index}
+							key={`${index}b`}
 							initial={{ y: 0 }}
 							animate={{
 								y: -height,
@@ -153,7 +153,7 @@ const InfiniteScroll = () => {
 									<motion.p
 										// ref={ref}
 										className="scrolling"
-										// key={index}
+										key={index}
 										// initial={{ y: 0 }}
 										// animate={{
 										// 	y: -size.height,
