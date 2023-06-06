@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 
+// test for animatepresence
 function useInterval(callback, delay) {
 	const intervalRef = React.useRef(null)
 	const savedCallback = React.useRef(callback)
@@ -50,57 +52,84 @@ const emojis = [
 ]
 
 const random = (min, max) => Math.floor(Math.random() * (max - min)) + min
-
-// text change intervals, so can be used to determine how long it should be stopped
-const timeChangeDelta = 300
-
-function generateTextData() {
-	const time = Date.now()
-	return {
-		text: letters[random(0, letters.length)],
-		createdAt: time,
+const range = (start, end, step = 1) => {
+	let output = []
+	if (typeof end === 'undefined') {
+		end = start
+		start = 0
 	}
+	for (let i = start; i < end; i += step) {
+		output.push(i)
+	}
+	return output
 }
 
+const displayText = 'what a nice day'
+const arrayOfDisplayText = displayText.split('')
+
+function generateTextData(number) {
+	const numberOfTexts = range(0, number)
+	const fullTextArray = []
+	numberOfTexts.map(() => {
+		fullTextArray.push(letters[random(0, letters.length)])
+	})
+	return fullTextArray
+}
+
+//
+const generateTimes = 9
+const numberOfDisplayText = range(0, displayText.length)
+const displayTextArray = []
+numberOfDisplayText.map((_, index) => {
+	const scrambleTexts = generateTextData(generateTimes)
+	displayTextArray.push([...scrambleTexts, arrayOfDisplayText[index]])
+})
+7
+
+const scrambleTexts = generateTextData()
+
 const ScrambleText = () => {
-	const [text, setText] = useState(null)
-	const [textTracking, setTextTracking] = useState([])
-	// console.log(textTracking)
-	const [hasStop, setHasStop] = useState(false)
-	useInterval(
-		() => {
-			let now = Date.now()
-			let textInstance = generateTextData()
-			setTextTracking([...textTracking, textInstance])
-			let checkRounds =
-				textTracking.filter((value) => {
-					let delta = now - value.createdAt
-					return delta > timeChangeDelta * 2
-				}).length > 0
-			setText(textInstance.text)
-			setHasStop(checkRounds)
-		},
-		hasStop ? null : timeChangeDelta
-	)
+	// const [text, setText] = useState(scrambleTexts)
 
-	// useInterval(() => {
-	// 	const now = Date.now()
-	// 	let textInstance = generateTextData()
+	// useInterval(
+	// 	() => {
+	// 		const removeOne = text.length > 1 ? [...text.slice(1)] : [...text]
+	// 		setText(removeOne)
+	// 	},
+	// 	text.length > 1 ? 300 : null
+	// )
 
-	// 	const filteredText = text.filter((value, index) => {
-	// 		let delta = now - value.createdAt
-	// 		return delta < 2900
-	// 	})
+	const [text, setText] = useState(displayTextArray)
 
-	// 	filteredText.push(textInstance)
-	// 	setText(filteredText)
-	// 	console.log(text)
-	// }, 3000)
+	useInterval(() => {
+		const newText = [...text]
+		const removeOne = newText.map((innerArray) =>
+			innerArray.length > 1 ? innerArray.slice(1) : innerArray
+		)
+		setText(removeOne)
+	}, 200)
 
 	return (
 		<>
-			<h1>123</h1>
-			<h1>{text}</h1>
+			<AnimatePresence>
+				{text.map((value, index) => {
+					return (
+						<motion.span
+							key={`${value}${index}`}
+							initial={{ opacity: 0 }}
+							animate={{
+								opacity: 1,
+								transition: {
+									delay: index * 0.3,
+								},
+							}}
+							exit={{ opacity: 0 }}
+						>
+							{value[0]}
+						</motion.span>
+					)
+				})}
+			</AnimatePresence>
 		</>
 	)
 }
