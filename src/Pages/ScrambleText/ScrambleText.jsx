@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import styled from 'styled-components'
+import { smooth } from '../../helper/easing'
 
 // test for animatepresence
 function useInterval(callback, delay) {
@@ -77,61 +79,137 @@ function generateTextData(number) {
 }
 
 //
-const generateTimes = 9
+const generateTimes = 10
 const numberOfDisplayText = range(0, displayText.length)
 const displayTextArray = []
 numberOfDisplayText.map((_, index) => {
 	const scrambleTexts = generateTextData(generateTimes)
 	displayTextArray.push([...scrambleTexts, arrayOfDisplayText[index]])
 })
-7
 
-const scrambleTexts = generateTextData()
+// hugo costa https://codepen.io/hug0hq/pen/OJXXLyB
+function shuffle(word) {
+	return word
+		.split('')
+		.sort(() => 0.5 - Math.random())
+		.join('')
+}
 
-const ScrambleText = () => {
-	// const [text, setText] = useState(scrambleTexts)
+const generateTextArray = (text = displayText) => {
+	let generatedText = []
+	let text2Array = text.split('')
+	text2Array.map((_, index) => {
+		let temp = shuffle(text).slice(0, index + 1)
+		generatedText.push(temp)
+	})
 
-	// useInterval(
-	// 	() => {
-	// 		const removeOne = text.length > 1 ? [...text.slice(1)] : [...text]
-	// 		setText(removeOne)
-	// 	},
-	// 	text.length > 1 ? 300 : null
-	// )
+	generatedText.push(text)
+	return generatedText
+}
 
-	const [text, setText] = useState(displayTextArray)
+const ScrambleTextEffect2 = ({ text }) => {
+	const [textArray] = useState(generateTextArray(text))
+	const [activeText, setActiveText] = useState(0)
 
-	useInterval(() => {
-		const newText = [...text]
-		const removeOne = newText.map((innerArray) =>
-			innerArray.length > 1 ? innerArray.slice(1) : innerArray
-		)
-		setText(removeOne)
-	}, 200)
+	useInterval(
+		() => {
+			setActiveText(activeText + 1)
+		},
+		activeText == textArray.length - 1 ? null : 100
+	)
 
 	return (
 		<>
-			<AnimatePresence>
-				{text.map((value, index) => {
+			<h1>{textArray[activeText]}</h1>
+		</>
+	)
+}
+
+const ScrambleText = () => {
+	const [text, setText] = useState(displayTextArray)
+
+	const moveY = Array.from(
+		{ length: text.length - 3 },
+		(_, index) => `${100 - 100 * index}%`
+	)
+
+	return (
+		<>
+			<PlayGround>
+				{text.map((innerArray, i) => {
 					return (
-						<motion.span
-							key={`${value}${index}`}
-							initial={{ opacity: 0 }}
-							animate={{
-								opacity: 1,
-								transition: {
-									delay: index * 0.3,
-								},
-							}}
-							exit={{ opacity: 0 }}
-						>
-							{value[0]}
-						</motion.span>
+						<Wrapper key={i}>
+							{innerArray.map((value, index) => {
+								return (
+									<Item
+										animate={{
+											y: moveY,
+										}}
+										transition={{
+											duration: text.length / 10,
+											ease: smooth,
+											delay: 1 + 0.25 * i,
+										}}
+										key={index}
+									>
+										{value}
+									</Item>
+								)
+							})}
+						</Wrapper>
 					)
 				})}
-			</AnimatePresence>
+			</PlayGround>
+			<ScrambleTextEffect2 text='abcde' />
 		</>
 	)
 }
 
 export default ScrambleText
+
+const PlayGround = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	/* height: 100%; */
+	width: 100%;
+`
+
+const Wrapper = styled.div`
+	overflow: hidden;
+	height: 32px;
+	width: 22px;
+	text-align: center;
+`
+const Item = styled(motion.h1)`
+	line-height: 1;
+	font-size: 32px;
+	font-family: var(--apercu-bold);
+`
+
+
+const originalString = "whatatime";
+const maxRandomLetters = 5;
+
+const generatedArray = [];
+
+for (let i = 0; i < originalString.length; i++) {
+  const randomLetters = i < maxRandomLetters ? generateRandomLetters() : generatedArray[i - maxRandomLetters];
+  const currentSubstring = originalString.substring(0, i + 1);
+  const currentEntry = currentSubstring + randomLetters;
+  generatedArray.push(currentEntry);
+}
+
+// Function to generate random letters
+function generateRandomLetters() {
+  const alphabet = "abcdefghijklmnopqrstuvwxyz";
+  let randomLetters = "";
+  
+  for (let i = 0; i < maxRandomLetters; i++) {
+    randomLetters += alphabet[Math.floor(Math.random() * alphabet.length)];
+  }
+  
+  return randomLetters;
+}
+
+console.log(generatedArray);
