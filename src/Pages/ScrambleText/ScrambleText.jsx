@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import styled from 'styled-components'
 import { smooth } from '../../helper/easing'
@@ -125,9 +125,121 @@ const ScrambleTextEffect2 = ({ text }) => {
 	)
 }
 
+const ScrambleTextEffect3 = () => {
+	const [text, setText] = useState('what a nice day')
+	const specialCharacters = [
+		'!',
+		'§',
+		'$',
+		'%',
+		'&',
+		'/',
+		'(',
+		')',
+		'=',
+		'?',
+		'_',
+		'<',
+		'>',
+		'^',
+		'°',
+		'*',
+		'#',
+		'-',
+		':',
+		';',
+		'~',
+	]
+	const random = (min, max) => Math.floor(Math.random() * (max - min)) + min
+	const time = 280
+	let count = 0
+	let j = 0
+	let delayAnimation = 0
+
+	useEffect(() => {
+		startScrambleText()
+	}, [])
+
+	const startScrambleText = () => {
+		const stringSplit = text.split('')
+		console.log(stringSplit)
+		const interval = setInterval(() => {
+			let newStringSplit = ''
+
+			for (let i = 0; i <= stringSplit.length - 1; i++) {
+				if (i <= j && count >= stringSplit.length + delayAnimation) {
+					newStringSplit += stringSplit[i]
+				} else {
+					newStringSplit +=
+						specialCharacters[
+							random(0, specialCharacters.length - 1)
+						]
+				}
+			}
+
+			setText(newStringSplit)
+			count++
+
+			if (count >= stringSplit.length + delayAnimation) {
+				j++
+
+				if (j >= stringSplit.length) {
+					clearInterval(interval)
+				}
+			}
+		}, time)
+	}
+
+	return (
+		<h1
+			className="text_box"
+			style={{
+				width: `${text.length}ch`,
+				animation: `typing ${(time * text.length) / 1000}s steps(${
+					text.length
+				})`,
+			}}
+		>
+			{text}
+		</h1>
+	)
+}
+
 const ScrambleText = () => {
 	const [text, setText] = useState(displayTextArray)
+	// let blockCharacters = [
+	// 	'&#x2591;',
+	// 	'&#x2592;',
+	// 	'&#x2593;',
+	// 	'&#x2588;',
+	// 	'&#x2596;',
+	// 	'&#x2597;',
+	// 	'&#x2598;',
+	// 	'&#x2599;',
+	// 	'&#x259A;',
+	// 	'&#x259B;',
+	// 	'&#x259C;',
+	// 	'&#x259D;',
+	// 	'&#x259E;',
+	// 	'&#x259F;',
+	// ]
 
+    const blockCharacters = [
+        '\u2591',
+        '\u2592',
+        '\u2593',
+        '\u2588',
+        '\u2596',
+        '\u2597',
+        '\u2598',
+        '\u2599',
+        '\u259A',
+        '\u259B',
+        '\u259C',
+        '\u259D',
+        '\u259E',
+        '\u259F',
+      ];
 	const moveY = Array.from(
 		{ length: text.length - 3 },
 		(_, index) => `${100 - 100 * index}%`
@@ -160,7 +272,9 @@ const ScrambleText = () => {
 					)
 				})}
 			</PlayGround>
-			<ScrambleTextEffect2 text='abcde' />
+			<ScrambleTextEffect2 text={displayText} />
+			<ScrambleTextEffect3 />
+            <h1>{blockCharacters}</h1>
 		</>
 	)
 }
@@ -188,28 +302,4 @@ const Item = styled(motion.h1)`
 `
 
 
-const originalString = "whatatime";
-const maxRandomLetters = 5;
-
-const generatedArray = [];
-
-for (let i = 0; i < originalString.length; i++) {
-  const randomLetters = i < maxRandomLetters ? generateRandomLetters() : generatedArray[i - maxRandomLetters];
-  const currentSubstring = originalString.substring(0, i + 1);
-  const currentEntry = currentSubstring + randomLetters;
-  generatedArray.push(currentEntry);
-}
-
-// Function to generate random letters
-function generateRandomLetters() {
-  const alphabet = "abcdefghijklmnopqrstuvwxyz";
-  let randomLetters = "";
-  
-  for (let i = 0; i < maxRandomLetters; i++) {
-    randomLetters += alphabet[Math.floor(Math.random() * alphabet.length)];
-  }
-  
-  return randomLetters;
-}
-
-console.log(generatedArray);
+// https://codepen.io/anthonyChaussin/pen/xQxdNz?editors=1010
