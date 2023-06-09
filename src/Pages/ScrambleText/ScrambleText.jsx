@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useTime } from 'framer-motion'
 import styled from 'styled-components'
 import { smooth } from '../../helper/easing'
 
@@ -47,10 +47,45 @@ const letters = [
 	'x',
 	'y',
 	'z',
+	1,
+	2,
+	3,
+	4,
+	5,
+	6,
+	7,
+	8,
+	9,
 ]
 
 const emojis = [
-	'😀, 😃, 😄, 😁, 😆, 😅, 😂, 🤣, 😊, 😇, 🙂, 🙃, 😉, 😌, 😍, 🥰, 😘, 😗, 😙, 😚, 😋, 😛, 😜, 🤪, 😝, 🤑, 🤗',
+	'😀',
+	'😃',
+	'😄',
+	'😁',
+	'😆',
+	'😅',
+	'😂',
+	'🤣',
+	'😊',
+	'😇',
+	'🙂',
+	'🙃',
+	'😉',
+	'😌',
+	'😍',
+	'🥰',
+	'😘',
+	'😗',
+	'😙',
+	'😚',
+	'😋',
+	'😛',
+	'😜',
+	'🤪',
+	'😝',
+	'🤑',
+	'🤗',
 ]
 
 const blockCharacters = [
@@ -94,6 +129,8 @@ const specialCharacters = [
 	'~',
 ]
 
+const test = [...letters, ...emojis]
+
 const random = (min, max) => Math.floor(Math.random() * (max - min)) + min
 const range = (start, end, step = 1) => {
 	let output = []
@@ -107,29 +144,24 @@ const range = (start, end, step = 1) => {
 	return output
 }
 
-const displayText = 'what a nice day'
-const arrayOfDisplayText = displayText.split('')
-
-function generateTextData(number) {
+function generateTextData(number, symbol = letters) {
 	const numberOfTexts = range(0, number)
 	const fullTextArray = []
 	numberOfTexts.map(() => {
-		fullTextArray.push(letters[random(0, letters.length)])
+		fullTextArray.push(symbol[random(0, symbol.length)])
 	})
 	return fullTextArray
 }
 
-//
-const generateTimes = 5
-const numberOfDisplayText = range(0, displayText.length)
-const displayTextArray = []
-numberOfDisplayText.map((_, index) => {
-	const scrambleTexts = generateTextData(generateTimes)
-	displayTextArray.push([...scrambleTexts, arrayOfDisplayText[index]])
-})
+const ScrambleTextEffect1 = ({ word, generateTimes = 5 }) => {
+	let generatedData = []
 
-const ScrambleTextEffect1 = () => {
-	const [text, setText] = useState(displayTextArray)
+	range(0, word.length).map((_, index) => {
+		const scrambleTexts = generateTextData(generateTimes)
+		generatedData.push([...scrambleTexts, word[index]])
+	})
+
+	const [text, setText] = useState(generatedData)
 
 	const moveY = Array.from(
 		{ length: generateTimes + 2 },
@@ -173,7 +205,7 @@ function shuffle(word) {
 		.join('')
 }
 
-const generateTextArray = (text = displayText) => {
+const generateTextArray = (text = '') => {
 	let generatedText = []
 	let text2Array = text.split('')
 	text2Array.map((_, index) => {
@@ -185,29 +217,28 @@ const generateTextArray = (text = displayText) => {
 	return generatedText
 }
 
-const ScrambleTextEffect2 = ({ text }) => {
-	const [textArray] = useState(generateTextArray(text))
+const ScrambleTextEffect2 = ({ word, speed = 100 }) => {
+	const [textArray] = useState(generateTextArray(word))
 	const [activeText, setActiveText] = useState(0)
 
 	useInterval(
 		() => {
 			setActiveText(activeText + 1)
 		},
-		activeText == textArray.length - 1 ? null : 50
+		activeText == textArray.length - 1 ? null : speed
 	)
 
 	return (
-		<>
+		<ItemWrapper>
 			<Item>{textArray[activeText]}</Item>
-		</>
+		</ItemWrapper>
 	)
 }
 
-const ScrambleTextEffect3 = () => {
-	const [text, setText] = useState('what a nice day')
+const ScrambleTextEffect3 = ({ word, speed = 100 }) => {
+	const [text, setText] = useState(word)
 
 	const random = (min, max) => Math.floor(Math.random() * (max - min)) + min
-	const time = 100
 	let count = 0
 	let j = 0
 	let delayAnimation = 0
@@ -224,16 +255,10 @@ const ScrambleTextEffect3 = () => {
 				if (i <= j && count >= stringSplit.length + delayAnimation) {
 					newStringSplit += stringSplit[i]
 				} else {
-					newStringSplit +=
-						specialCharacters[
-							random(0, specialCharacters.length - 1)
-						]
+					newStringSplit += letters[random(0, letters.length - 1)]
 				}
 			}
 
-			// if (count === 1) {
-			// 	console.log(newStringSplit) // Log the initial value of text on the first interval
-			// }
 			setText(newStringSplit)
 
 			count++
@@ -245,10 +270,14 @@ const ScrambleTextEffect3 = () => {
 					clearInterval(interval)
 				}
 			}
-		}, time)
+		}, speed)
 	}
 
-	return <Item>{text}</Item>
+	return (
+		<ItemWrapper>
+			<Item>{text}</Item>
+		</ItemWrapper>
+	)
 }
 
 function generateRandomString(inputString) {
@@ -256,91 +285,107 @@ function generateRandomString(inputString) {
 	let randomString = ''
 
 	for (let i = 0; i < length; i++) {
-		const randomCharCode = Math.floor(Math.random() * 26) + 97 // Random lowercase character code (97-122)
-		const randomChar = String.fromCharCode(randomCharCode)
-		randomString += randomChar
+		const randomCharCode = letters[random(0, letters.length - 1)]
+		randomString += randomCharCode
 	}
 
 	return randomString
 }
 
-const ScrambleTextEffect4 = () => {
-	let max = 3
-	// const [text, setText] = useState('what a nice day')
-	const [text, setText] = useState([
-		'1',
-		'sa',
-		'dse',
-		'wih2',
-		'whza',
-		'wha6',
-		'what',
-	])
-	let temp = []
-	const [count, setCount] = useState(0)
-	const [j, setJ] = useState(0)
+const ScrambleTextEffect4 = ({ word, speed = 100 }) => {
+	let max = 8
 
+	// example of the disired array
+	// const [text, setText] = useState([
+	// 	'1',
+	// 	'sa',
+	// 	'dse',
+	// 	'wih2',
+	// 	'whza2',
+	// 	'wha63d',
+	// 	'what567',
+	// 	'whata67u',
+	// 	'whatad7s',
+	// 	'whatadae',
+	// 	'whataday',
+	// ])
+
+	let temp = []
+	const [text, setText] = useState(temp)
 	const [activeText, setActiveText] = useState(0)
+
+	// generate max of random letter like ['c','er','tww']
+
+	// max = 3
+	// ------->
+	// c
+	// er
+	// tww
+
+	range(0, max).map((v, i) => {
+		let newString = ''
+		for (let j = 0; j <= i; j++) {
+			newString += generateRandomString(j.toString())
+		}
+		temp.push(newString)
+	})
+
+	range(0, word.length).map((v, i) => {
+		let newString = ''
+		let newTemp = []
+
+		for (let index = 0; index < word.length; index++) {
+			if (index <= i) {
+				newString = word[index]
+				newTemp.push(newString)
+			} else {
+				newString = generateRandomString(index.toString())
+				newTemp.push(newString)
+			}
+		}
+
+		let final = newTemp.join('')
+		temp.push(
+			final
+				.split('')
+				.slice(0, max + i < word.length ? max + i : word.length)
+		)
+	})
 
 	useInterval(
 		() => {
-			if (count < max) {
-				arrayOfDisplayText.map((value, index) => {
-					temp.push(
-						generateRandomString(
-							arrayOfDisplayText.slice(0, index + 1).join('')
-						)
-					)
-				})
-			} else {
-				arrayOfDisplayText.map((value, index) => {
-					if (index <= j) {
-						temp.push(
-							arrayOfDisplayText.slice(0, index + 1).join('')
-						)
-					} else {
-						temp.push(
-							generateRandomString(
-								arrayOfDisplayText.slice(0, index + 1).join('')
-							)
-						)
-					}
-				})
-			}
-
-			setCount((prevCount) => prevCount + 1)
-			setText(temp)
-			console.log(temp)
-			if (count >= max) {
-				setJ(j + 1)
-			}
 			setActiveText(activeText + 1)
 		},
-		j == text.length ? null : 500
+		activeText == max + word.length - 1 ? null : speed
 	)
 
 	return (
-		<>
-			<Item>{text[0]}</Item>
-		</>
+		<ItemWrapper>
+			<Item>{text[activeText]}</Item>
+		</ItemWrapper>
 	)
 }
 
 const ScrambleText = () => {
-	const [text, setText] = useState(displayTextArray)
-
-	const moveY = Array.from(
-		{ length: text.length - 3 },
-		(_, index) => `${100 - 100 * index}%`
-	)
-
 	return (
 		<Examples>
-			<div>
-				<ScrambleTextEffect2 text={displayText} />
-				<ScrambleTextEffect3 />
-				<ScrambleTextEffect4 />
-				<ScrambleTextEffect1 />
+			<div style={{ width: '50vw' }}>
+				<ScrambleTextEffect3
+					word="It was a dark and stormy night,
+The wind howled with all its might."
+					speed={100}
+				/>
+				<ScrambleTextEffect2
+					word="The rain poured down in relentless streams,
+I sought shelter from my haunting dreams."
+					speed={95}
+				/>
+				<ScrambleTextEffect4
+					word="But in the darkness, a flicker of light,
+Guided me through the endless night."
+					speed={75}
+				/>
+				{/* <ScrambleTextEffect1 word="It was a dark and stormy night." /> */}
 			</div>
 		</Examples>
 	)
@@ -370,8 +415,12 @@ const Wrapper = styled.div`
 	width: 20px;
 	text-align: center;
 `
+
+const ItemWrapper = styled.div`
+	margin-bottom: 2rem;
+`
 const Item = styled(motion.h1)`
-	line-height: 1;
+	line-height: 1.4;
 	font-size: 32px;
 	font-family: var(--apercu-bold);
 	color: var(--green3);
