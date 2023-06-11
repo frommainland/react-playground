@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { AnimatePresence, motion, useTime } from 'framer-motion'
 import styled from 'styled-components'
 import { smooth } from '../../helper/easing'
+import { letters, emojis, blockCharacters, specialCharacters } from './symbols'
 
-// test for animatepresence
 function useInterval(callback, delay) {
 	const intervalRef = React.useRef(null)
 	const savedCallback = React.useRef(callback)
@@ -19,117 +19,6 @@ function useInterval(callback, delay) {
 	}, [delay])
 	return intervalRef
 }
-
-const letters = [
-	'a',
-	'b',
-	'c',
-	'd',
-	'e',
-	'f',
-	'g',
-	'h',
-	'i',
-	'j',
-	'k',
-	'l',
-	'm',
-	'n',
-	'o',
-	'p',
-	'q',
-	'r',
-	's',
-	't',
-	'u',
-	'v',
-	'w',
-	'x',
-	'y',
-	'z',
-	1,
-	2,
-	3,
-	4,
-	5,
-	6,
-	7,
-	8,
-	9,
-]
-
-const emojis = [
-	'😀',
-	'😃',
-	'😄',
-	'😁',
-	'😆',
-	'😅',
-	'😂',
-	'🤣',
-	'😊',
-	'😇',
-	'🙂',
-	'🙃',
-	'😉',
-	'😌',
-	'😍',
-	'🥰',
-	'😘',
-	'😗',
-	'😙',
-	'😚',
-	'😋',
-	'😛',
-	'😜',
-	'🤪',
-	'😝',
-	'🤑',
-	'🤗',
-]
-
-const blockCharacters = [
-	'\u2591',
-	'\u2592',
-	'\u2593',
-	'\u2588',
-	'\u2596',
-	'\u2597',
-	'\u2598',
-	'\u2599',
-	'\u259A',
-	'\u259B',
-	'\u259C',
-	'\u259D',
-	'\u259E',
-	'\u259F',
-]
-
-const specialCharacters = [
-	'!',
-	'§',
-	'$',
-	'%',
-	'&',
-	'/',
-	'(',
-	')',
-	'=',
-	'?',
-	'_',
-	'<',
-	'>',
-	'^',
-	'°',
-	'*',
-	'#',
-	'-',
-	':',
-	';',
-	'~',
-]
-
-const test = [...letters, ...emojis]
 
 const random = (min, max) => Math.floor(Math.random() * (max - min)) + min
 const range = (start, end, step = 1) => {
@@ -292,8 +181,8 @@ function generateRandomString(inputString) {
 	return randomString
 }
 
-const ScrambleTextEffect4 = ({ word, speed = 100 }) => {
-	let max = 8
+const ScrambleTextEffect4 = ({ word = '', speed = 100, isReset }) => {
+	let max = 10
 
 	// example of the disired array
 	// const [text, setText] = useState([
@@ -311,8 +200,15 @@ const ScrambleTextEffect4 = ({ word, speed = 100 }) => {
 	// ])
 
 	let temp = []
-	const [text, setText] = useState(temp)
+	let diffTemp = []
+	const [text] = useState(temp)
+	const [diffText] = useState(diffTemp)
 	const [activeText, setActiveText] = useState(0)
+
+	// reset button clicked, reset all
+	useEffect(() => {
+		setActiveText(0)
+	}, [isReset])
 
 	// generate max of random letter like ['c','er','tww']
 
@@ -338,6 +234,8 @@ const ScrambleTextEffect4 = ({ word, speed = 100 }) => {
 			if (index <= i) {
 				newString = word[index]
 				newTemp.push(newString)
+				// newString = ''
+				// newTemp.push(newString)
 			} else {
 				newString = generateRandomString(index.toString())
 				newTemp.push(newString)
@@ -345,11 +243,32 @@ const ScrambleTextEffect4 = ({ word, speed = 100 }) => {
 		}
 
 		let final = newTemp.join('')
+		// temp.push(final)
 		temp.push(
 			final
 				.split('')
-				.slice(0, max + i < word.length ? max + i : word.length)
+				.slice(i + 1, max + i < word.length ? max + i : word.length)
+				.join('')
 		)
+	})
+
+	//  --------- only show done part ------------------------------
+
+	// set up start, empty with max times
+	range(0, max).map(() => {
+		diffTemp.push('')
+	})
+
+	// get "done" part
+	range(0, word.length).map((v, i) => {
+		let newString = ''
+		let newTemp = []
+		for (let index = 0; index <= i; index++) {
+			newString = word[index]
+			newTemp.push(newString)
+		}
+		let final = newTemp.join('')
+		diffTemp.push(final)
 	})
 
 	useInterval(
@@ -361,32 +280,120 @@ const ScrambleTextEffect4 = ({ word, speed = 100 }) => {
 
 	return (
 		<ItemWrapper>
-			<Item>{text[activeText]}</Item>
+			<ScrambleTextSpan>{diffText[activeText]}</ScrambleTextSpan>
+			<ScrambleTextSpan
+				style={{
+					color: 'var(--green1)',
+					backgroundColor: 'var(--green3)',
+				}}
+			>
+				{text[activeText]}
+			</ScrambleTextSpan>
+			{/* <span>{text[10]}</span> */}
 		</ItemWrapper>
 	)
 }
 
+const ScrambleTextSpan = styled.span`
+	line-height: 1.4;
+	font-size: 24px;
+	font-family: var(--apercu-bold);
+	color: var(--green3);
+`
+//------------------------------------------
+
+const SettingButton = styled.div`
+	font-size: 1rem;
+	font-family: var(--apercu-bold);
+	padding: 10px;
+	border-radius: 0.5em;
+	&:hover {
+		background-color: var(--green2);
+		cursor: pointer;
+	}
+`
+const SettingButtonWrap = styled.div`
+	padding: 1rem;
+	border-radius: 0.5rem;
+	border: 1px solid var(--green3);
+	box-shadow: 0px 4px 4px rgba(61, 72, 56, 0.25);
+`
+
+const SVGRefresh = (props) => (
+	<svg
+		width={24}
+		height={24}
+		viewBox="0 0 24 24"
+		fill="none"
+		xmlns="http://www.w3.org/2000/svg"
+		{...props}
+	>
+		<path
+			d="M1 4v6h6"
+			stroke="#3d4838"
+			strokeWidth={2}
+			strokeLinecap="round"
+			strokeLinejoin="round"
+		/>
+		<path
+			d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"
+			stroke="#3d4838"
+			strokeWidth={2}
+			strokeLinecap="round"
+			strokeLinejoin="round"
+		/>
+	</svg>
+)
+
+const Settings = ({ resetHandler }) => {
+	return (
+		<div
+			style={{
+				display: 'flex',
+				justifyContent: 'flex-start',
+				width: '50vw',
+				gap: '2rem',
+			}}
+		>
+			<SettingButtonWrap>
+				<SettingButton>settings</SettingButton>
+			</SettingButtonWrap>
+			<SettingButtonWrap>
+				<SettingButton onClick={resetHandler}>
+					<SVGRefresh />
+				</SettingButton>
+			</SettingButtonWrap>
+		</div>
+	)
+}
+
+///----------------------------------------- full component---
+
+let text =
+	'It was a dark and stormy night,\nThe wind howled with all its might.\nThe rain poured down in relentless streams,\nI sought shelter from my haunting dreams.\nBut in the darkness, a flicker of light,\nGuided me through the endless night.'
+
 const ScrambleText = () => {
+	const [isReset, setIsReset] = useState(0)
+	function resetHandler() {
+		setIsReset((pre) => pre + 1)
+	}
 	return (
 		<Examples>
 			<div style={{ width: '50vw' }}>
-				<ScrambleTextEffect3
+				{/* <ScrambleTextEffect3
 					word="It was a dark and stormy night,
 The wind howled with all its might."
 					speed={100}
-				/>
-				<ScrambleTextEffect2
+				/> */}
+				{/* <ScrambleTextEffect2
 					word="The rain poured down in relentless streams,
 I sought shelter from my haunting dreams."
 					speed={95}
-				/>
-				<ScrambleTextEffect4
-					word="But in the darkness, a flicker of light,
-Guided me through the endless night."
-					speed={75}
-				/>
+				/> */}
+				<ScrambleTextEffect4 word={text} speed={75} isReset={isReset} />
 				{/* <ScrambleTextEffect1 word="It was a dark and stormy night." /> */}
 			</div>
+			<Settings resetHandler={resetHandler} />
 		</Examples>
 	)
 }
@@ -421,7 +428,7 @@ const ItemWrapper = styled.div`
 `
 const Item = styled(motion.h1)`
 	line-height: 1.4;
-	font-size: 32px;
+	font-size: 24px;
 	font-family: var(--apercu-bold);
 	color: var(--green3);
 `
