@@ -3,6 +3,7 @@ import { AnimatePresence, motion, useTime } from 'framer-motion'
 import styled from 'styled-components'
 import { smooth } from '../../helper/easing'
 import { letters, emojis, blockCharacters, specialCharacters } from './symbols'
+import './ScrambleText.scss'
 
 function useInterval(callback, delay) {
 	const intervalRef = React.useRef(null)
@@ -169,19 +170,19 @@ const ScrambleTextEffect3 = ({ word, speed = 100 }) => {
 	)
 }
 
-function generateRandomString(inputString) {
+function generateRandomString(inputString, symbol = letters) {
 	const length = inputString.length
 	let randomString = ''
 
 	for (let i = 0; i < length; i++) {
-		const randomCharCode = letters[random(0, letters.length - 1)]
+		const randomCharCode = symbol[random(0, symbol.length - 1)]
 		randomString += randomCharCode
 	}
 
 	return randomString
 }
 
-const ScrambleTextEffect4 = ({ word = '', speed = 100, isReset }) => {
+const ScrambleTextEffect4 = ({ word = '', speed = 100, isReset, scrambleText = letters }) => {
 	let max = 10
 
 	// example of the disired array
@@ -302,7 +303,7 @@ const ScrambleTextSpan = styled.span`
 `
 //------------------------------------------
 
-const SettingButton = styled.div`
+const SettingButton = styled(motion.div)`
 	font-size: 1rem;
 	font-family: var(--apercu-bold);
 	padding: 10px;
@@ -312,9 +313,9 @@ const SettingButton = styled.div`
 		cursor: pointer;
 	}
 `
-const SettingButtonWrap = styled.div`
+const SettingButtonWrap = styled(motion.div)`
 	padding: 1rem;
-	border-radius: 0.5rem;
+	/* border-radius: 0.5rem; */
 	border: 1px solid var(--green3);
 	box-shadow: 0px 4px 4px rgba(61, 72, 56, 0.25);
 `
@@ -345,38 +346,154 @@ const SVGRefresh = (props) => (
 	</svg>
 )
 
-const Settings = ({ resetHandler }) => {
+let text =
+	'It was a dark and stormy night,\nThe wind howled with all its might.\nThe rain poured down in relentless streams,\nI sought shelter from my haunting dreams.\nBut in the darkness, a flicker of light,\nGuided me through the endless night.'
+
+const settingSpeed = ['0.25x', '0.5x', '1x', '2x']
+const settingText = ['Aa', '😀😅', '▛░', '%&']
+const settingEffect = ['scramble 1', 'scramble 2', 'scramble 3']
+
+const Settings = ({ resetHandler, speedHandler }) => {
+	const [isClicked, setIsClicked] = useState(false)
+	const [speedSelected, setSpeedSelected] = useState(2)
+	const [textSelected, setTextSelected] = useState(0)
+	const [effectSelected, setEffectSelected] = useState(0)
 	return (
-		<div
+		<motion.div
 			style={{
 				display: 'flex',
-				justifyContent: 'flex-start',
+				alignContent: 'flex-start',
+				alignItems: 'flex-start',
 				width: '50vw',
 				gap: '2rem',
 			}}
+			layout
 		>
-			<SettingButtonWrap>
-				<SettingButton>settings</SettingButton>
-			</SettingButtonWrap>
-			<SettingButtonWrap>
+			{/* setting button */}
+			<motion.div
+				layout
+				initial={{
+					borderRadius: 10,
+					border: '1px solid var(--green3)',
+					boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+				}}
+				className={isClicked ? 'parent isOpen' : 'parent'}
+			>
+				{!isClicked && (
+					<motion.div
+						layout
+						className="setting-button"
+						initial={{ opacity: 0, fontSize: '1rem' }}
+						animate={{ opacity: 1 }}
+						onClick={() => setIsClicked(true)}
+					>
+						setting
+					</motion.div>
+				)}
+
+				{/* setting pannels */}
+				{isClicked && (
+					<motion.div
+						className="setting-panel"
+						layout
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						exit={{ opacity: 0 }}
+					>
+						<div className="row-wrap">
+							<div className="row">
+								{settingSpeed.map((v, i) => {
+									return (
+										<div
+											className="setting-button"
+											key={i}
+											style={{
+												backgroundColor:
+													speedSelected == i
+														? '#C2D1BC'
+														: null,
+											}}
+											onClick={() => {
+												setSpeedSelected(i)
+												speedHandler(v)
+											}}
+										>
+											{v}
+										</div>
+									)
+								})}
+							</div>
+							<div className="row">
+								{settingText.map((v, i) => {
+									return (
+										<div
+											className="setting-button"
+											key={i}
+											style={{
+												backgroundColor:
+                                                textSelected == i
+														? '#C2D1BC'
+														: null,
+											}}
+                                            onClick={() => {
+												setTextSelected(i)
+											}}
+										>
+											{v}
+										</div>
+									)
+								})}
+							</div>
+							<div className="row">
+								{settingEffect.map((v, i) => {
+									return (
+										<div className="setting-button" key={i}>
+											{v}
+										</div>
+									)
+								})}
+							</div>
+						</div>
+						<div
+							className="setting-button"
+							style={{ textAlign: 'center' }}
+							onClick={() => setIsClicked(false)}
+						>
+							close
+						</div>
+					</motion.div>
+				)}
+			</motion.div>
+			<SettingButtonWrap layout>
 				<SettingButton onClick={resetHandler}>
 					<SVGRefresh />
 				</SettingButton>
 			</SettingButtonWrap>
-		</div>
+		</motion.div>
 	)
 }
 
 ///----------------------------------------- full component---
-
-let text =
-	'It was a dark and stormy night,\nThe wind howled with all its might.\nThe rain poured down in relentless streams,\nI sought shelter from my haunting dreams.\nBut in the darkness, a flicker of light,\nGuided me through the endless night.'
 
 const ScrambleText = () => {
 	const [isReset, setIsReset] = useState(0)
 	function resetHandler() {
 		setIsReset((pre) => pre + 1)
 	}
+
+	const [speedRatio, setSpeedRatio] = useState(1)
+	function speedHandler(item) {
+		let number = parseFloat(item)
+		setSpeedRatio(number)
+	}
+
+    const [textVariation, setTextVariation] = useState(letters)
+	function textHandler(item) {
+		setTextVariation()
+	}
+
+    console.log(textVariation)
+
 	return (
 		<Examples>
 			<div style={{ width: '50vw' }}>
@@ -390,10 +507,15 @@ The wind howled with all its might."
 I sought shelter from my haunting dreams."
 					speed={95}
 				/> */}
-				<ScrambleTextEffect4 word={text} speed={75} isReset={isReset} />
+				<ScrambleTextEffect4
+					word={text}
+					speed={75 / speedRatio}
+					isReset={isReset}
+                    // scrambleText={textVariation}
+				/>
 				{/* <ScrambleTextEffect1 word="It was a dark and stormy night." /> */}
 			</div>
-			<Settings resetHandler={resetHandler} />
+			<Settings resetHandler={resetHandler} speedHandler={speedHandler} />
 		</Examples>
 	)
 }
