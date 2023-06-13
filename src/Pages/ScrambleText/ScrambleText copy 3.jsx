@@ -170,7 +170,7 @@ const ScrambleTextEffect3 = ({ word, speed = 100 }) => {
 	)
 }
 
-function generateRandomString(inputString, symbol = '') {
+function generateRandomString(inputString, symbol='') {
 	const length = inputString.length
 	let randomString = ''
 
@@ -207,8 +207,10 @@ const ScrambleTextEffect4 = ({
 	// 	'whataday',
 	// ])
 
-	const [text, setText] = useState(scrambledText())
-	const [diffText] = useState(doneText())
+	let temp = []
+	let diffTemp = []
+	const [text] = useState(temp)
+	const [diffText] = useState(diffTemp)
 	const [activeText, setActiveText] = useState(0)
 
 	// reset button clicked, reset all
@@ -216,11 +218,7 @@ const ScrambleTextEffect4 = ({
 		setActiveText(0)
 	}, [isReset])
 
-	useEffect(() => {
-		setText(scrambledText())
-	}, [textVariation])
-
-	// generate max of random letter like ['c','er','tww'] and remove the 'done' part
+	// generate max of random letter like ['c','er','tww']
 
 	// max = 3
 	// ------->
@@ -228,74 +226,64 @@ const ScrambleTextEffect4 = ({
 	// er
 	// tww
 
-	function scrambledText() {
-		let temp = []
-		range(0, max).map((v, i) => {
-			let newString = ''
-			for (let j = 0; j <= i; j++) {
-				newString += generateRandomString(
-					j.toString(),
-					allTextVariations[textVariation]
-				)
-			}
-			temp.push(newString)
-		})
-
-		range(0, word.length).map((v, i) => {
-			let newString = ''
-			let newTemp = []
-
-			for (let index = 0; index < word.length; index++) {
-				if (index <= i) {
-					newString = word[index]
-					newTemp.push(newString)
-					// newString = ''
-					// newTemp.push(newString)
-				} else {
-					newString = generateRandomString(
-						index.toString(),
-						allTextVariations[textVariation]
-					)
-					newTemp.push(newString)
-				}
-			}
-
-			let final = newTemp.join('')
-			// temp.push(final)
-			temp.push(
-				final
-					.split('')
-					.slice(i + 1, max + i < word.length ? max + i : word.length)
-					.join('')
+	range(0, max).map((v, i) => {
+		let newString = ''
+		for (let j = 0; j <= i; j++) {
+			newString += generateRandomString(
+				j.toString(),
+				emojis
 			)
-		})
+		}
+		temp.push(newString)
+	})
 
-		return temp
-	}
+	range(0, word.length).map((v, i) => {
+		let newString = ''
+		let newTemp = []
+
+		for (let index = 0; index < word.length; index++) {
+			if (index <= i) {
+				newString = word[index]
+				newTemp.push(newString)
+				// newString = ''
+				// newTemp.push(newString)
+			} else {
+				newString = generateRandomString(
+					index.toString(),
+					emojis
+				)
+				newTemp.push(newString)
+			}
+		}
+
+		let final = newTemp.join('')
+		// temp.push(final)
+		temp.push(
+			final
+				.split('')
+				.slice(i + 1, max + i < word.length ? max + i : word.length)
+				.join('')
+		)
+	})
 
 	//  --------- only show done part ------------------------------
 
-	function doneText() {
-		let diffTemp = []
-		// set up start, empty with max times
-		range(0, max).map(() => {
-			diffTemp.push('')
-		})
+	// set up start, empty with max times
+	range(0, max).map(() => {
+		diffTemp.push('')
+	})
 
-		// get "done" part
-		range(0, word.length).map((v, i) => {
-			let newString = ''
-			let newTemp = []
-			for (let index = 0; index <= i; index++) {
-				newString = word[index]
-				newTemp.push(newString)
-			}
-			let final = newTemp.join('')
-			diffTemp.push(final)
-		})
-
-		return diffTemp
-	}
+	// get "done" part
+	range(0, word.length).map((v, i) => {
+		let newString = ''
+		let newTemp = []
+		for (let index = 0; index <= i; index++) {
+			newString = word[index]
+			newTemp.push(newString)
+		}
+		let final = newTemp.join('')
+		diffTemp.push(final)
+	})
 
 	useInterval(
 		() => {
@@ -309,9 +297,8 @@ const ScrambleTextEffect4 = ({
 			<ScrambleTextSpan>{diffText[activeText]}</ScrambleTextSpan>
 			<ScrambleTextSpan
 				style={{
-					color: 'var(--green3)',
-                    fontFamily:'var(--apercu-regular)'
-					// backgroundColor: 'var(--green3)',
+					color: 'var(--green1)',
+					backgroundColor: 'var(--green3)',
 				}}
 			>
 				{text[activeText]}
@@ -375,7 +362,7 @@ let text =
 	'It was a dark and stormy night,\nThe wind howled with all its might.\nThe rain poured down in relentless streams,\nI sought shelter from my haunting dreams.\nBut in the darkness, a flicker of light,\nGuided me through the endless night.'
 
 const settingSpeed = ['0.25x', '0.5x', '1x', '2x']
-const settingText = ['Aa', '🞉⯁', '▛░', '%&']
+const settingText = ['Aa', '😀😅', '▛░', '%&']
 const settingEffect = ['scramble 1', 'scramble 2', 'scramble 3']
 
 const Settings = ({ resetHandler, speedHandler, textHandler }) => {
@@ -517,6 +504,7 @@ const ScrambleText = () => {
 	function textHandler(item) {
 		setTextVariation(item)
 	}
+    console.log(textVariation)
 
 	return (
 		<Examples>
