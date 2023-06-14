@@ -125,40 +125,42 @@ const ScrambleTextEffect2 = ({ word, speed = 100 }) => {
 	)
 }
 
-const ScrambleTextEffect3 = ({ word, speed, isReset, textVariation }) => {
-	const [text, setText] = useState(shuffle(word))
-	const [count, setCount] = useState(0)
-	const [j, setJ] = useState(0)
-	let stringSplit = word.split('')
+const ScrambleTextEffect3 = ({ word, speed = 100, isReset }) => {
+	const [text, setText] = useState(word)
+
+	const random = (min, max) => Math.floor(Math.random() * (max - min)) + min
+	let count = 0
+	let j = 0
 
 	useEffect(() => {
-		setJ(0)
+		startScrambleText()
 	}, [isReset])
 
-	useInterval(
-		() => {
+	const startScrambleText = () => {
+		const stringSplit = text.split('')
+		const interval = setInterval(() => {
 			let newStringSplit = ''
-			stringSplit.map((value, i) => {
+			for (let i = 0; i <= stringSplit.length - 1; i++) {
 				if (i <= j && count >= stringSplit.length) {
-					newStringSplit += value
+					newStringSplit += stringSplit[i]
 				} else {
-					newStringSplit +=
-						allTextVariations[textVariation][
-							random(
-								0,
-								allTextVariations[textVariation].length - 1
-							)
-						]
+					newStringSplit += letters[random(0, letters.length - 1)]
 				}
-			})
-			setText(newStringSplit)
-			setCount(count + 1)
-			if (count >= stringSplit.length) {
-				setJ(j + 1)
 			}
-		},
-		j >= stringSplit.length ? null : speed
-	)
+
+			setText(newStringSplit)
+
+			count++
+
+			if (count >= stringSplit.length) {
+				j++
+
+				if (j >= stringSplit.length) {
+					clearInterval(interval)
+				}
+			}
+		}, speed)
+	}
 
 	return (
 		<ItemWrapper>
@@ -384,7 +386,7 @@ const Settings = ({
 	const [isClicked, setIsClicked] = useState(false)
 	const [speedSelected, setSpeedSelected] = useState(2)
 	const [textSelected, setTextSelected] = useState(0)
-	const [effectSelected, setEffectSelected] = useState(1)
+	const [effectSelected, setEffectSelected] = useState(0)
 	return (
 		<motion.div
 			style={{
@@ -533,7 +535,7 @@ const ScrambleText = () => {
 		setTextVariation(item)
 	}
 
-	const [effectVariation, setEffectVariation] = useState(1)
+	const [effectVariation, setEffectVariation] = useState(0)
 	function effectHandler(item) {
 		setEffectVariation(item)
 	}
@@ -551,10 +553,9 @@ const ScrambleText = () => {
 				) : effectVariation == 1 ? (
 					<ScrambleTextEffect3
 						word="It was a dark and stormy night,
-						The wind howled with all its might."
-						speed={100 / speedRatio}
+The wind howled with all its might."
+						speed={100}
 						isReset={isReset}
-						textVariation={textVariation}
 					/>
 				) : (
 					<ScrambleTextEffect2
