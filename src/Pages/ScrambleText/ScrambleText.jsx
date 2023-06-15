@@ -34,6 +34,8 @@ const range = (start, end, step = 1) => {
 	return output
 }
 
+const allTextVariations = [letters, emojis, blockCharacters, specialCharacters]
+
 function generateTextData(number, symbol = letters) {
 	const numberOfTexts = range(0, number)
 	const fullTextArray = []
@@ -94,22 +96,38 @@ function shuffle(word) {
 		.sort(() => 0.5 - Math.random())
 		.join('')
 }
+const generateTextArray = (text, textVariation) => {
+	// change original words into random text: 'haha, i got it.' => '21ds,8 ksa 09'
+	let randomString = ''
+	let chosenTextVariation = allTextVariations[textVariation]
+	for (let i = 0; i < text.length; i++) {
+		const randomCharCode =
+			chosenTextVariation[random(0, chosenTextVariation.length - 1)]
+		randomString += randomCharCode
+	}
 
-const generateTextArray = (text = '') => {
 	let generatedText = []
 	let text2Array = text.split('')
+
 	text2Array.map((_, index) => {
-		let temp = shuffle(text).slice(0, index + 1)
+		let temp = shuffle(randomString).slice(0, index + 1)
 		generatedText.push(temp)
 	})
-
 	generatedText.push(text)
 	return generatedText
 }
 
-const ScrambleTextEffect2 = ({ word, speed = 100 }) => {
-	const [textArray] = useState(generateTextArray(word))
+const ScrambleTextEffect2 = ({ word, speed = 100, isReset, textVariation }) => {
+	const [textArray, setTextArray] = useState(0)
 	const [activeText, setActiveText] = useState(0)
+
+	useEffect(() => {
+		setActiveText(0)
+	}, [isReset])
+
+	useEffect(() => {
+		setTextArray(generateTextArray(word, textVariation))
+	}, [textVariation])
 
 	useInterval(
 		() => {
@@ -119,9 +137,11 @@ const ScrambleTextEffect2 = ({ word, speed = 100 }) => {
 	)
 
 	return (
-		<ItemWrapper>
-			<Item>{textArray[activeText]}</Item>
-		</ItemWrapper>
+		<motion.div style={{ width: '50vw' }} layout>
+			<ItemWrapper>
+				<Item>{textArray[activeText]}</Item>
+			</ItemWrapper>
+		</motion.div>
 	)
 }
 
@@ -161,9 +181,11 @@ const ScrambleTextEffect3 = ({ word, speed, isReset, textVariation }) => {
 	)
 
 	return (
-		<ItemWrapper>
-			<Item>{text}</Item>
-		</ItemWrapper>
+		<motion.div style={{ width: '50vw' }} layout>
+			<ItemWrapper>
+				<Item>{text}</Item>
+			</ItemWrapper>
+		</motion.div>
 	)
 }
 
@@ -178,8 +200,6 @@ function generateRandomString(inputString, symbol = '') {
 
 	return randomString
 }
-
-const allTextVariations = [letters, emojis, blockCharacters, specialCharacters]
 
 const ScrambleTextEffect4 = ({
 	word = '',
@@ -302,18 +322,20 @@ const ScrambleTextEffect4 = ({
 	)
 
 	return (
-		<ItemWrapper>
-			<ScrambleTextSpan>{diffText[activeText]}</ScrambleTextSpan>
-			<ScrambleTextSpan
-				style={{
-					color: 'var(--green3)',
-					fontFamily: 'var(--apercu-regular)',
-					// backgroundColor: 'var(--green3)',
-				}}
-			>
-				{text[activeText]}
-			</ScrambleTextSpan>
-		</ItemWrapper>
+		<motion.div style={{ width: '50vw' }} layout>
+			<ItemWrapper>
+				<ScrambleTextSpan>{diffText[activeText]}</ScrambleTextSpan>
+				<ScrambleTextSpan
+					style={{
+						color: 'var(--green3)',
+						fontFamily: 'var(--apercu-regular)',
+						// backgroundColor: 'var(--green3)',
+					}}
+				>
+					{text[activeText]}
+				</ScrambleTextSpan>
+			</ItemWrapper>
+		</motion.div>
 	)
 }
 
@@ -384,7 +406,7 @@ const Settings = ({
 	const [isClicked, setIsClicked] = useState(false)
 	const [speedSelected, setSpeedSelected] = useState(2)
 	const [textSelected, setTextSelected] = useState(0)
-	const [effectSelected, setEffectSelected] = useState(1)
+	const [effectSelected, setEffectSelected] = useState(0)
 	return (
 		<motion.div
 			style={{
@@ -533,39 +555,40 @@ const ScrambleText = () => {
 		setTextVariation(item)
 	}
 
-	const [effectVariation, setEffectVariation] = useState(1)
+	const [effectVariation, setEffectVariation] = useState(0)
 	function effectHandler(item) {
 		setEffectVariation(item)
 	}
 
 	return (
-		<Examples>
-			<div style={{ width: '50vw' }}>
-				{effectVariation == 0 ? (
-					<ScrambleTextEffect4
-						word={text}
-						speed={75 / speedRatio}
-						isReset={isReset}
-						textVariation={textVariation}
-					/>
-				) : effectVariation == 1 ? (
-					<ScrambleTextEffect3
-						word="It was a dark and stormy night,
-						The wind howled with all its might."
-						speed={100 / speedRatio}
-						isReset={isReset}
-						textVariation={textVariation}
-					/>
-				) : (
-					<ScrambleTextEffect2
-						word="The rain poured down in relentless streams,
-I sought shelter from my haunting dreams."
-						speed={95 / speedRatio}
-					/>
-				)}
+		<Examples layout>
+			{/* <ScrambleTextEffect1 word="It was a dark and stormy night." /> */}
 
-				{/* <ScrambleTextEffect1 word="It was a dark and stormy night." /> */}
-			</div>
+			{effectVariation == 0 ? (
+				<ScrambleTextEffect4
+					word={text}
+					speed={75 / speedRatio}
+					isReset={isReset}
+					textVariation={textVariation}
+				/>
+			) : effectVariation == 1 ? (
+				<ScrambleTextEffect3
+					word="It was a dark and stormy night,
+						The wind howled with all its might."
+					speed={100 / speedRatio}
+					isReset={isReset}
+					textVariation={textVariation}
+				/>
+			) : (
+				<ScrambleTextEffect2
+					word="The rain poured down in relentless streams,
+						I sought shelter from my haunting dreams."
+					speed={95 / speedRatio}
+					isReset={isReset}
+					textVariation={textVariation}
+				/>
+			)}
+
 			<Settings
 				resetHandler={resetHandler}
 				speedHandler={speedHandler}
@@ -578,13 +601,13 @@ I sought shelter from my haunting dreams."
 
 export default ScrambleText
 
-const Examples = styled.div`
+const Examples = styled(motion.div)`
 	display: flex;
-	display: flex;
-	justify-content: center;
 	align-items: center;
+	justify-content: center;
 	flex-direction: column;
 	height: 100%;
+	/* width: 100%; */
 `
 
 const PlayGround = styled.div`
@@ -607,7 +630,7 @@ const ItemWrapper = styled.div`
 const Item = styled(motion.h1)`
 	line-height: 1.4;
 	font-size: 24px;
-	font-family: var(--apercu-bold);
+	font-family: var(--apercu-bold), sans-serif;
 	color: var(--green3);
 `
 
