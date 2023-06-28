@@ -7,6 +7,7 @@ import LongPress from './Pages/LongPress/LongPress'
 import InfiniteScroll from './Pages/InfiniteScroll/InfiniteScroll'
 import HoverSparkle from './Pages/HoverSparkle/HoverSparkle'
 import ScrambleText from './Pages/ScrambleText/ScrambleText'
+import SmoothInOut from './Pages/smoothInOut/SmoothInOut'
 import NoMatch from './Pages/NoMatch'
 
 import React, { useState, useEffect } from 'react'
@@ -36,10 +37,15 @@ const menuItems = [
 		pathName: 'PickSparkle',
 		element: <HoverSparkle />,
 	},
-    {
+	{
 		listName: 'scramble text',
 		pathName: 'ScrambleText',
 		element: <ScrambleText />,
+	},
+	{
+		listName: 'smooth in & out',
+		pathName: 'SmoothInOut',
+		element: <SmoothInOut />,
 	},
 ]
 
