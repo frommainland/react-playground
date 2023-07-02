@@ -1,6 +1,5 @@
 import './App.scss'
 import './font.scss'
-import './component/Sidebar.scss'
 import { Routes, Route, Outlet, Link } from 'react-router-dom'
 import EmojiOnMouse from './Pages/EmojiOnMouse/EmojiOnMouse'
 import LongPress from './Pages/LongPress/LongPress'
@@ -10,12 +9,13 @@ import ScrambleText from './Pages/ScrambleText/ScrambleText'
 import SmoothInOut from './Pages/smoothInOut/SmoothInOut'
 import NoMatch from './Pages/NoMatch'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import './component/Sidebar.scss'
 import { motion } from 'framer-motion'
 import { useMeasure } from 'react-use'
 import { atom, useAtom } from 'jotai'
 
+// imput of sidebar list - content and pathnames
 const menuItems = [
 	{
 		listName: 'emoji on mouseover',
@@ -43,10 +43,61 @@ const menuItems = [
 		element: <ScrambleText />,
 	},
 	{
-		listName: 'smooth in & out',
+		listName: 'smooth in & out smooth in & out smooth in & out',
 		pathName: 'SmoothInOut',
 		element: <SmoothInOut />,
 	},
+    {
+		listName: 'smooth in & out smooth in & out smooth in & out1',
+		pathName: 'SmoothInOut1',
+		element: <SmoothInOut />,
+	},
+    {
+		listName: 'smooth in & out smooth in & out smooth in & out2',
+		pathName: 'SmoothInOut1',
+		element: <SmoothInOut />,
+	},
+    {
+		listName: 'smooth in & out smooth in & out smooth in & out3',
+		pathName: 'SmoothInOut1',
+		element: <SmoothInOut />,
+	},
+    {
+		listName: 'smooth in & out smooth in & out smooth in & out4',
+		pathName: 'SmoothInOut1',
+		element: <SmoothInOut />,
+	},
+    {
+		listName: 'smooth in & out smooth in & out smooth in & out5',
+		pathName: 'SmoothInOut1',
+		element: <SmoothInOut />,
+	},
+    {
+		listName: 'smooth in & out smooth in & out smooth in & out6',
+		pathName: 'SmoothInOut1',
+		element: <SmoothInOut />,
+	},
+    {
+		listName: 'smooth in & out smooth in & out smooth in & out7',
+		pathName: 'SmoothInOut1',
+		element: <SmoothInOut />,
+	},
+    {
+		listName: 'smooth in & out smooth in & out smooth in & out8',
+		pathName: 'SmoothInOut1',
+		element: <SmoothInOut />,
+	},
+    {
+		listName: 'smooth in & out smooth in & out smooth in & out9',
+		pathName: 'SmoothInOut1',
+		element: <SmoothInOut />,
+	},
+    {
+		listName: 'smooth in & out smooth in & out smooth in & out10',
+		pathName: 'SmoothInOut1',
+		element: <SmoothInOut />,
+	},
+
 ]
 
 const MenuItem = ({ text, selected, onClick, pathName }) => {
@@ -80,32 +131,82 @@ const MenuItem = ({ text, selected, onClick, pathName }) => {
 	)
 }
 
-export const sideBarWidthAtom = atom(null)
+// export const sideBarWidthAtom = atom(null)
 
 const Sidebar = () => {
 	const [selected, setSelected] = useState(0)
-	const [ref, { width, height }] = useMeasure()
-	const [sidebarWidth, setSideBarWidth] = useAtom(sideBarWidthAtom)
+	// const [ref, { width, height }] = useMeasure()
+	// const [sidebarWidth, setSideBarWidth] = useAtom(sideBarWidthAtom)
 
+	// useEffect(() => {
+	// 	setSideBarWidth(width)
+	// }, [])
+
+	const [isMenuClicked, setIsMenuClicked] = useState(false)
+	const [isScrolled, setIsScrolled] = useState(false)
+    console.log(isScrolled)
+const ref = useRef()
 	useEffect(() => {
-		setSideBarWidth(width)
-	}, [])
+		const handScroll = () => {
+			setIsScrolled(ref.scrollY > 1)
+		}
+
+		window.addEventListener('scroll', handScroll)
+		return () => {
+			window.removeEventListener('scroll', handScroll)
+		}
+	}, [isScrolled])
 
 	return (
 		<>
-			<nav className="sidebar" ref={ref}>
-				<ol>
-					{menuItems.map((value, index) => (
-						<MenuItem
-							text={value.listName}
-							key={value.listName}
-							selected={selected === index}
-							onClick={() => setSelected(index)}
-							pathName={value.pathName}
-						/>
-					))}
-				</ol>
-			</nav>
+			<svg
+				className="menu-icon"
+				width="18"
+				height="12"
+				viewBox="0 0 18 12"
+				fill="none"
+				xmlns="http://www.w3.org/2000/svg"
+				onClick={() => setIsMenuClicked(true)}
+			>
+				<path
+					d="M0 0H18V2H0V0ZM0 5H18V7H0V5ZM0 10H18V12H0V10Z"
+					fill="black"
+				/>
+			</svg>
+
+			<motion.div
+				className="sidebar-wrap"
+				animate={{ x: isMenuClicked ? 275 : 0 }}
+			>
+				<nav className="sidebar" ref={ref}>
+					<div className={isScrolled ? 'scrolled' : 'site-logo-wrap'}>
+						<svg
+							width="24"
+							height="24"
+							viewBox="0 0 24 24"
+							fill="none"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								d="M2 13H4V15H6V13H8V15H10V13H12V15H14V10L17 7V1H19L23 3L19 5V7L22 10V22H11V19C11 18.4696 10.7893 17.9609 10.4142 17.5858C10.0391 17.2107 9.53043 17 9 17C8.46957 17 7.96086 17.2107 7.58579 17.5858C7.21071 17.9609 7 18.4696 7 19V22H2V13ZM18 10C17.45 10 17 10.54 17 11.2V13H19V11.2C19 10.54 18.55 10 18 10Z"
+								fill="var(--green3)"
+							/>
+						</svg>
+						<p className="logo-text">Playground</p>
+					</div>
+					<ol>
+						{menuItems.map((value, index) => (
+							<MenuItem
+								text={value.listName}
+								key={value.listName}
+								selected={selected === index}
+								onClick={() => setSelected(index)}
+								pathName={value.pathName}
+							/>
+						))}
+					</ol>
+				</nav>
+			</motion.div>
 			<div className="playground">
 				<Outlet />
 			</div>

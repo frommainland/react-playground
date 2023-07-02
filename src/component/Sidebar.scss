@@ -1,37 +1,5 @@
 /* 2 pinterest long press */
 
 .sidebar {
-	padding-top: 12px;
-	min-height: 100vh;
-	background-color: var(--green2);
-	z-index: -2;
-	font-family: var(--apercu-bold);
-	ol {
-		padding-left: 12px;
-		a {
-			text-decoration: none;
-			li {
-				list-style-position: inside;
-				box-sizing: content-box;
-				font-style: normal;
-				font-weight: 600;
-				font-size: 16px;
-				line-height: 150%;
-				padding: 10px;
-				padding-right: 0;
-				margin-right: 10px;
-				margin-bottom: 4px;
-				border-radius: 8px;
-				position: relative;
-				cursor: pointer;
-				z-index: 0;
-				.sidebar-underline {
-					position: absolute;
-					background-color: var(--green3);
-					z-index: -1;
-					border-radius: 8px;
-				}
-			}
-		}
-	}
+	
 }
