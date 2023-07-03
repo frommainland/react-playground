@@ -175,7 +175,13 @@ const Sidebar = () => {
 			</svg>
 
 			<motion.div
-				className={isMenuClicked ? 'sidebar-wrap open' : 'sidebar-wrap'}
+				className="sidebar-wrap"
+				animate={{
+					x: isMenuClicked ? 275 : 0,
+					transition: {
+						ease: smooth,
+					},
+				}}
 			>
 				<nav className="sidebar" ref={sideBarRef}>
 					<div
@@ -199,11 +205,11 @@ const Sidebar = () => {
 						</svg>
 						<p className="logo-text">Playground</p>
 					</div>
-					<ol className="sidebar-list">
+					<ol>
 						{menuItems.map((value, index) => (
 							<MenuItem
 								text={value.listName}
-								key={`${value.listName}big`}
+								key={value.listName}
 								selected={selected === index}
 								onClick={() => {
 									setSelected(index)

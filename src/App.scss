@@ -152,15 +152,32 @@ $sidebar-width: 275px;
 		@media (min-width: $size-l) {
 			position: sticky;
 			top: 0;
+			width: $sidebar-width;
 		}
 		@media (min-width: $size-xs) and (max-width: $size-l) {
 			position: absolute;
 			left: -$sidebar-width;
+			width: $sidebar-width;
+		}
+		@media (max-width: $size-xs) {
+			position: absolute;
+			left: 0;
+			width: 100svw;
 		}
 	}
 
+	.sidebar-wrap.open {
+		@media (min-width: $size-xs) and (max-width: $size-l) {
+			left: 0;
+		}
+		@media (max-width: $size-xs) {
+			left: -$sidebar-width;
+		}
+	}
+
+
 	.sidebar-wrap {
-		width: $sidebar-width;
+		transition: all 0.3s ease-in-out;
 		border-right: 1px solid var(--divider);
 		height: 100svh;
 		display: flex;
@@ -174,12 +191,19 @@ $sidebar-width: 275px;
 			background-color: var(--green2);
 			z-index: -2;
 			font-family: var(--apercu-bold);
+			.site-logo-wrap.scrolled {
+				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+				background-color: var(--green1);
+				border-right: 1px solid var(--divider);
+			}
 			.site-logo-wrap {
-                z-index: 3;
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0);
+				transition: box-shadow 0.3s ease-in-out;
+				z-index: 3;
 				display: flex;
 				gap: 0.625em;
 				padding: 0.625em 1em;
-                padding-top: 1.375em;
+				padding-top: 1.375em;
 				position: sticky;
 				top: 0;
 				cursor: pointer;
@@ -193,7 +217,7 @@ $sidebar-width: 275px;
 					color: var(--green3);
 				}
 			}
-			ol {
+			.sidebar-list {
 				padding-left: 0px;
 				a {
 					text-decoration: none;

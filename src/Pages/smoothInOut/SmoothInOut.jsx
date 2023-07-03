@@ -20,7 +20,6 @@ const Mini = () => {
 	const miniRef = useRef(null)
 
 	const [startData] = useState(randomStartStateData())
-	console.log(startData)
 
 	useEffect(() => {
 		const ele = miniRef.current
@@ -81,7 +80,6 @@ const Wide = () => {
 	const cardRef = useRef(null)
 
 	const [startData] = useState(randomStartStateData())
-	console.log(startData)
 
 	useEffect(() => {
 		const ele = cardRef.current
@@ -141,7 +139,6 @@ const Sx = () => {
 	const sxRef = useRef(null)
 
 	const [startData] = useState(randomStartStateData())
-	console.log(startData)
 
 	useEffect(() => {
 		const ele = sxRef.current
