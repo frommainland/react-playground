@@ -12,7 +12,7 @@ import NoMatch from './Pages/NoMatch'
 
 import React, { useState, useEffect, useRef } from 'react'
 import './component/Sidebar.scss'
-import { motion } from 'framer-motion'
+import { LayoutGroup, easeIn, easeInOut, easeOut, motion } from 'framer-motion'
 import { useMeasure } from 'react-use'
 
 // imput of sidebar list - content and pathnames
@@ -105,7 +105,6 @@ const MenuItem = ({ text, selected, onClick, pathName }) => {
 		<Link to={`/${pathName}`}>
 			<motion.li
 				ref={ref}
-				className="menu-item"
 				onClick={onClick}
 				animate={{
 					color: selected ? '#EFFFE8' : '#3D4838',
@@ -130,35 +129,23 @@ const MenuItem = ({ text, selected, onClick, pathName }) => {
 	)
 }
 
-// export const sideBarWidthAtom = atom(null)
-
-const Sidebar = () => {
+const NormalSideBar = () => {
 	const [selected, setSelected] = useState(0)
-	// const [ref, { width, height }] = useMeasure()
-	// const [sidebarWidth, setSideBarWidth] = useAtom(sideBarWidthAtom)
-
-	// useEffect(() => {
-	// 	setSideBarWidth(width)
-	// }, [])
-
-	const [isMenuClicked, setIsMenuClicked] = useState(false)
 	const [isScrolled, setIsScrolled] = useState(false)
-
 	const sideBarRef = useRef()
 
 	useEffect(() => {
 		const handleScroll = () => {
-			setIsScrolled(sideBarRef.current.scrollTop > 2)
+			setIsScrolled(sideBarRef.current.scrollTop > 0)
 		}
-
 		sideBarRef.current.addEventListener('scroll', handleScroll)
 		return () => {
 			sideBarRef.current.removeEventListener('scroll', handleScroll)
 		}
 	}, [])
 
-	return (
-		<>
+	const MenuIcon = () => {
+		return (
 			<svg
 				className="menu-icon"
 				width="18"
@@ -173,9 +160,20 @@ const Sidebar = () => {
 					fill="black"
 				/>
 			</svg>
+		)
+	}
 
-			<motion.div
-				className={isMenuClicked ? 'sidebar-wrap open' : 'sidebar-wrap'}
+	const [isMenuClicked, setIsMenuClicked] = useState(false)
+
+	return (
+		<>
+			<MenuIcon />
+			<div
+				className={
+					isMenuClicked
+						? 'normal-sidebar-wrap open'
+						: 'normal-sidebar-wrap'
+				}
 			>
 				<nav className="sidebar" ref={sideBarRef}>
 					<div
@@ -203,18 +201,91 @@ const Sidebar = () => {
 						{menuItems.map((value, index) => (
 							<MenuItem
 								text={value.listName}
-								key={`${value.listName}big`}
+								key={value.listName}
 								selected={selected === index}
 								onClick={() => {
 									setSelected(index)
 									setIsMenuClicked(false)
 								}}
 								pathName={value.pathName}
+								layoutID="normal"
 							/>
 						))}
 					</ol>
 				</nav>
-			</motion.div>
+			</div>
+		</>
+	)
+}
+
+const XSSideBar = () => {
+	const [isMenuClicked, setIsMenuClicked] = useState(false)
+	const sideBarRef = useRef()
+	const [isScrolled, setIsScrolled] = useState(false)
+	const [selected, setSelected] = useState(0)
+
+	useEffect(() => {
+		const handleScroll = () => {
+			setIsScrolled(sideBarRef.current.scrollTop > 0)
+		}
+		sideBarRef.current.addEventListener('scroll', handleScroll)
+		return () => {
+			sideBarRef.current.removeEventListener('scroll', handleScroll)
+		}
+	}, [])
+
+	return (
+		<motion.div
+			className={
+				isMenuClicked ? 'xs-sidebar-wrap close' : 'xs-sidebar-wrap'
+			}
+		>
+			<nav className="sidebar" ref={sideBarRef}>
+				<div
+					className={
+						isScrolled
+							? 'scrolled site-logo-wrap'
+							: 'site-logo-wrap'
+					}
+				>
+					<svg
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path
+							d="M2 13H4V15H6V13H8V15H10V13H12V15H14V10L17 7V1H19L23 3L19 5V7L22 10V22H11V19C11 18.4696 10.7893 17.9609 10.4142 17.5858C10.0391 17.2107 9.53043 17 9 17C8.46957 17 7.96086 17.2107 7.58579 17.5858C7.21071 17.9609 7 18.4696 7 19V22H2V13ZM18 10C17.45 10 17 10.54 17 11.2V13H19V11.2C19 10.54 18.55 10 18 10Z"
+							fill="var(--green3)"
+						/>
+					</svg>
+					<p className="logo-text">Playground</p>
+				</div>
+				<ol className="sidebar-list">
+					{menuItems.map((value, index) => (
+						<MenuItem
+							text={value.listName}
+							key={`${value.listName}xs`}
+							selected={selected === index}
+							onClick={() => {
+								setSelected(index)
+								setIsMenuClicked(true)
+							}}
+							pathName={value.pathName}
+						/>
+					))}
+				</ol>
+			</nav>
+		</motion.div>
+	)
+}
+
+const Layout = () => {
+	return (
+		<>
+			<NormalSideBar />
+			<XSSideBar />
 			<div className="playground">
 				<Outlet />
 			</div>
@@ -226,7 +297,7 @@ function App() {
 	return (
 		<>
 			<Routes>
-				<Route path="/" element={<Sidebar />}>
+				<Route path="/" element={<Layout />}>
 					<Route index element={<EmojiOnMouse />} />
 					{menuItems.map((value, index) => {
 						return (
@@ -239,10 +310,6 @@ function App() {
 							/>
 						)
 					})}
-					{/* <Route index element={<EmojiOnMouse />} /> */}
-					{/* <Route path="longPress" element={<LongPress />} />
-					<Route path="emojiOnMouse" element={<EmojiOnMouse />} /> */}
-
 					<Route path="*" element={<NoMatch />} />
 				</Route>
 			</Routes>

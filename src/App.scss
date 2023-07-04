@@ -148,7 +148,7 @@ $sidebar-width: 275px;
 		z-index: 2;
 	}
 
-	.sidebar-wrap {
+	.normal-sidebar-wrap {
 		@media (min-width: $size-l) {
 			position: sticky;
 			top: 0;
@@ -160,13 +160,11 @@ $sidebar-width: 275px;
 			width: $sidebar-width;
 		}
 		@media (max-width: $size-xs) {
-			position: absolute;
-			left: 0;
-			width: 100svw;
+			display: none !important;
 		}
 	}
 
-	.sidebar-wrap.open {
+	.normal-sidebar-wrap.open {
 		@media (min-width: $size-xs) and (max-width: $size-l) {
 			left: 0;
 		}
@@ -175,8 +173,28 @@ $sidebar-width: 275px;
 		}
 	}
 
+	.xs-sidebar-wrap {
+		@media (min-width: $size-l) {
+			display: none !important;
+		}
+		@media (min-width: $size-xs) and (max-width: $size-l) {
+			display: none !important;
+		}
+		@media (max-width: $size-xs) {
+			position: absolute;
+			top: 0;
+            left: 0;
+			width: 100svw;
+		}
+	}
+	.xs-sidebar-wrap.close {
+		@media (max-width: $size-xs) {
+			left: -100svw;
+		}
+	}
 
-	.sidebar-wrap {
+	.normal-sidebar-wrap,
+	.xs-sidebar-wrap {
 		transition: all 0.3s ease-in-out;
 		border-right: 1px solid var(--divider);
 		height: 100svh;
@@ -220,7 +238,7 @@ $sidebar-width: 275px;
 			.sidebar-list {
 				padding-left: 0px;
 				a {
-					text-decoration: none;
+					text-decoration: none !important;
 					li {
 						list-style-position: inside;
 						box-sizing: content-box;
@@ -237,6 +255,7 @@ $sidebar-width: 275px;
 						z-index: 0;
 						margin-left: 0.625em;
 						margin-right: 0.625em;
+						color: var(--green3);
 						.sidebar-underline {
 							position: absolute;
 							background-color: var(--green3);
