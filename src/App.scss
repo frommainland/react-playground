@@ -127,25 +127,62 @@ $sidebar-width: 275px;
 	--green1: #efffe8;
 	--green2: #e4f2dd;
 	--green3: #3d4838;
+	--greenHover: #cedac7;
 	--divider: #d3e0cd;
 	--apercu-bold: apercu-bold;
 	--apercu-regular: apercu-regular;
 	display: flex;
-
-	.menu-icon {
+	min-height: 100svh;
+	.menu-icon-wrap {
 		@media (min-width: $size-l) {
 			display: none;
 		}
 		@media (max-width: $size-xs) {
 			display: none;
 		}
-		position: absolute;
-		width: 1.5em;
-		height: 1.5em;
+		position: fixed;
+		display: flex;
+		z-index: 2;
 		left: 1.25em;
 		top: 1.25em;
+		padding: 1em;
+		border-radius: 100%;
 		cursor: pointer;
+		transition: all 0.3s ease-in-out;
+		background-color: var(--green1);
+		.menu-icon {
+			width: 1.5em;
+			height: 1.5em;
+		}
+	}
+	.menu-icon-wrap:hover {
+		background-color: var(--greenHover);
+	}
+
+	.backbutton-wrap {
+		@media (min-width: $size-l) {
+			display: none !important;
+		}
+		@media (min-width: $size-xs) and (max-width: $size-l) {
+			display: none !important;
+		}
+		position: fixed;
+		display: flex;
 		z-index: 2;
+		left: 1.25em;
+		top: 1.25em;
+		padding: 1em;
+		border-radius: 100%;
+		cursor: pointer;
+		transition: all 0.3s ease-in-out;
+		background-color: var(--green1);
+		.back-icon {
+			width: 1.5em;
+			height: 1.5em;
+		}
+	}
+	.backbutton-wrap:hover {
+		background-color: var(--greenHover);
 	}
 
 	.normal-sidebar-wrap {
@@ -167,6 +204,9 @@ $sidebar-width: 275px;
 	.normal-sidebar-wrap.open {
 		@media (min-width: $size-xs) and (max-width: $size-l) {
 			left: 0;
+			position: fixed;
+			top: 0;
+			z-index: 99;
 		}
 		@media (max-width: $size-xs) {
 			left: -$sidebar-width;
@@ -181,10 +221,11 @@ $sidebar-width: 275px;
 			display: none !important;
 		}
 		@media (max-width: $size-xs) {
-			position: absolute;
+			position: fixed;
 			top: 0;
-            left: 0;
+			left: 0;
 			width: 100svw;
+			z-index: 99;
 		}
 	}
 	.xs-sidebar-wrap.close {
@@ -269,7 +310,6 @@ $sidebar-width: 275px;
 	}
 	.playground {
 		background-color: var(--green1);
-		flex: 1;
-		height: 100svh;
+		flex-grow: 1;
 	}
 }

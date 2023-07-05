@@ -146,20 +146,24 @@ const NormalSideBar = () => {
 
 	const MenuIcon = () => {
 		return (
-			<svg
-				className="menu-icon"
-				width="18"
-				height="12"
-				viewBox="0 0 18 12"
-				fill="none"
-				xmlns="http://www.w3.org/2000/svg"
+			<div
+				className="menu-icon-wrap"
 				onClick={() => setIsMenuClicked(true)}
 			>
-				<path
-					d="M0 0H18V2H0V0ZM0 5H18V7H0V5ZM0 10H18V12H0V10Z"
-					fill="black"
-				/>
-			</svg>
+				<svg
+					className="menu-icon"
+					width="18"
+					height="12"
+					viewBox="0 0 18 12"
+					fill="none"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<path
+						d="M0 0H18V2H0V0ZM0 5H18V7H0V5ZM0 10H18V12H0V10Z"
+						fill="black"
+					/>
+				</svg>
+			</div>
 		)
 	}
 
@@ -234,50 +238,83 @@ const XSSideBar = () => {
 		}
 	}, [])
 
-	return (
-		<motion.div
-			className={
-				isMenuClicked ? 'xs-sidebar-wrap close' : 'xs-sidebar-wrap'
-			}
-		>
-			<nav className="sidebar" ref={sideBarRef}>
-				<div
-					className={
-						isScrolled
-							? 'scrolled site-logo-wrap'
-							: 'site-logo-wrap'
-					}
+	const BackButton = () => {
+		return (
+			<div className="backbutton-wrap" onClick={() => setIsMenuClicked(false)}>
+				<svg
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					fill="none"
+					xmlns="http://www.w3.org/2000/svg"
+					className="back-icon"
 				>
-					<svg
-						width="24"
-						height="24"
-						viewBox="0 0 24 24"
-						fill="none"
-						xmlns="http://www.w3.org/2000/svg"
+					<path
+						d="M19 12H5"
+						stroke="black"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					/>
+					<path
+						d="M12 19L5 12L12 5"
+						stroke="black"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					/>
+				</svg>
+			</div>
+		)
+	}
+
+	return (
+		<>
+			<BackButton />
+			<motion.div
+				className={
+					isMenuClicked ? 'xs-sidebar-wrap close' : 'xs-sidebar-wrap'
+				}
+			>
+				<nav className="sidebar" ref={sideBarRef}>
+					<div
+						className={
+							isScrolled
+								? 'scrolled site-logo-wrap'
+								: 'site-logo-wrap'
+						}
 					>
-						<path
-							d="M2 13H4V15H6V13H8V15H10V13H12V15H14V10L17 7V1H19L23 3L19 5V7L22 10V22H11V19C11 18.4696 10.7893 17.9609 10.4142 17.5858C10.0391 17.2107 9.53043 17 9 17C8.46957 17 7.96086 17.2107 7.58579 17.5858C7.21071 17.9609 7 18.4696 7 19V22H2V13ZM18 10C17.45 10 17 10.54 17 11.2V13H19V11.2C19 10.54 18.55 10 18 10Z"
-							fill="var(--green3)"
-						/>
-					</svg>
-					<p className="logo-text">Playground</p>
-				</div>
-				<ol className="sidebar-list">
-					{menuItems.map((value, index) => (
-						<MenuItem
-							text={value.listName}
-							key={`${value.listName}xs`}
-							selected={selected === index}
-							onClick={() => {
-								setSelected(index)
-								setIsMenuClicked(true)
-							}}
-							pathName={value.pathName}
-						/>
-					))}
-				</ol>
-			</nav>
-		</motion.div>
+						<svg
+							width="24"
+							height="24"
+							viewBox="0 0 24 24"
+							fill="none"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								d="M2 13H4V15H6V13H8V15H10V13H12V15H14V10L17 7V1H19L23 3L19 5V7L22 10V22H11V19C11 18.4696 10.7893 17.9609 10.4142 17.5858C10.0391 17.2107 9.53043 17 9 17C8.46957 17 7.96086 17.2107 7.58579 17.5858C7.21071 17.9609 7 18.4696 7 19V22H2V13ZM18 10C17.45 10 17 10.54 17 11.2V13H19V11.2C19 10.54 18.55 10 18 10Z"
+								fill="var(--green3)"
+							/>
+						</svg>
+						<p className="logo-text">Playground</p>
+					</div>
+					<ol className="sidebar-list">
+						{menuItems.map((value, index) => (
+							<MenuItem
+								text={value.listName}
+								key={`${value.listName}xs`}
+								selected={selected === index}
+								onClick={() => {
+									setSelected(index)
+									setIsMenuClicked(true)
+								}}
+								pathName={value.pathName}
+							/>
+						))}
+					</ol>
+				</nav>
+			</motion.div>
+		</>
 	)
 }
 
